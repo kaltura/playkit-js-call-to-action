@@ -36,9 +36,21 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(({title, descr
         <TextWithTooltip text={description || ''} numberOfLines={2}></TextWithTooltip>
       </div>
 
-      <div className={styles.buttonsContainer}></div>
+      <div className={styles.buttonsContainer}>
+        <CallToActionButtons buttons={buttons || []} />
+      </div>
     </div>
   );
 });
+
+const CallToActionButtons = ({buttons}: {buttons: Array<{label: string; link: string}>}) => {
+  if (!buttons.length) {
+    return <div className={styles.noButtons}></div>;
+  } else if (buttons.length === 1) {
+    return <div className={styles.oneButton}></div>;
+  } else {
+    return <div className={styles.twoButtons}></div>;
+  }
+};
 
 export {CallToActionPopup};
