@@ -8,30 +8,24 @@ import {TextWithTooltip} from '../text-with-tooltip';
 
 // TODO
 // @ts-ignore
-const {Tooltip} = window.KalturaPlayer.ui.components;
+const {ui} = window.KalturaPlayer;
+const {Tooltip} = ui.components;
+const {withText} = ui.preacti18n;
 
 interface CallToActionPopupProps {
   title?: string;
   description?: string;
   buttons?: Array<{label: string; link: string}>;
   onClose: () => void;
+  closeLabel: string;
 }
 
-const CallToActionPopup = ({title, description, buttons, onClose}: CallToActionPopupProps) => {
+const CallToActionPopup = withText({closeLabel: 'overlay.close'})(({title, description, buttons, onClose, closeLabel}: CallToActionPopupProps) => {
   return (
     <div className={styles.callToActionPopup}>
       <div className={styles.closeButton}>
         <A11yWrapper onClick={onClose}>
-          <Button
-            type={ButtonType.borderless}
-            size={ButtonSize.medium}
-            //   tooltip={{label: closeLabel!}}
-            //   ariaLabel={closeLabel}
-            icon={'close'}
-            //   setRef={ref => {
-            //     closeButtonRef.current = ref;
-            //   }}
-          />
+          <Button type={ButtonType.borderless} size={ButtonSize.medium} tooltip={{label: closeLabel!}} ariaLabel={closeLabel} icon={'close'} />
         </A11yWrapper>
       </div>
 
@@ -42,16 +36,9 @@ const CallToActionPopup = ({title, description, buttons, onClose}: CallToActionP
         <TextWithTooltip text={description || ''} numberOfLines={2}></TextWithTooltip>
       </div>
 
-      {/* <Tooltip label={title || ''}>
-        <div className={styles.title}>{title || ''}</div>
-      </Tooltip>
-      <Tooltip label={description || ''}>
-        <div className={styles.description}>{description || ''}</div>
-      </Tooltip> */}
-
       <div className={styles.buttonsContainer}></div>
     </div>
   );
-};
+});
 
 export {CallToActionPopup};
