@@ -1,0 +1,37 @@
+.call-to-action-popup {
+
+    background-color: rgba(0, 0, 0, 0.7); 
+    // background-color: red;
+    bottom: 0;
+    color: #fff;
+    // height: 144px;
+    padding: 16px;
+    position: absolute;
+    right: 0;
+    width: 280px;
+    z-index: 1;
+
+    .close-button {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 20px;
+        width: calc(100% - 16px);
+    }
+
+    .description {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        margin-top: 8px;
+    }
+
+    .buttons-container {
+        margin-top: 8px;
+    }
+}
