@@ -1,10 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
+import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
+
 import {CallToActionConfig, MessageData} from './types';
-
-import {ContribServices, FloatingItem, FloatingPositions, FloatingUIModes} from '@playkit-js/common/dist/ui-common';
-
 import {CallToActionPopup} from './components';
 
 // import {AudioPlayerView, AudioPlayerUI} from './components';
@@ -14,7 +13,6 @@ interface MessageVisibilityData {
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
-  private contribServices: ContribServices;
   private popupInstance: FloatingItem | null = null;
 
   protected static defaultConfig: CallToActionConfig = {
@@ -28,12 +26,14 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-
-    this.contribServices = ContribServices.get({kalturaPlayer: player});
   }
 
-  getUIComponents(): any[] {
-    return this.contribServices.register();
+  getUIComponents() {
+    return this.floatingManager.registerUIComponents();
+  }
+
+  private get floatingManager(): FloatingManager {
+    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   static isValid() {
@@ -138,17 +138,17 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   hideOverlay() {}
 
   showPopup({title, description, buttons}: {title?: string; description?: string; buttons?: Array<{label: string; link: string}>}) {
-    this.popupInstance = this.contribServices.floatingManager.add({
+    this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
-      mode: FloatingUIModes.Immediate,
-      position: FloatingPositions.InteractiveArea,
+      mode: 'Immediate',
+      position: 'InteractiveArea',
       renderContent: () => <CallToActionPopup title={title} description={description} onClose={() => this.hidePopup()} />
     });
   }
 
   hidePopup() {
     if (this.popupInstance) {
-      this.contribServices.floatingManager.remove(this.popupInstance);
+      this.floatingManager.remove(this.popupInstance);
     }
   }
 
