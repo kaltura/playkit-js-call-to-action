@@ -1,0 +1,35 @@
+.call-to-action-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+
+    .content-container {
+        .title {
+            font-size: 32px;
+            line-height: 32px;
+        }
+
+        .description {
+            font-size: 16px;
+            line-height: 21px;
+        }
+
+        .buttons-container {
+
+        }
+    }
+
+    &.tiny {
+
+    }
+
+    &.small {
+
+    }
+
+    &.medium {
+
+    }
+
+    &.large {
+
+    }
+}
