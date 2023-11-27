@@ -48,8 +48,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       if (startMessage) {
         this.eventManager.listen(this.player, 'firstplaying', () => {
           // TODO will this be called on start over as well ?
-          const {title, description} = startMessage;
-          this.showPopup({title, description});
+          const {title, description, buttons} = startMessage;
+          this.showPopup({title, description, buttons});
 
           if (startMessage.timing.duration) {
             // TODO
@@ -71,7 +71,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
         // if there is a message that should be shown, show it
         for (const message of midMessages) {
-          const {title, description} = message;
+          const {title, description, buttons} = message;
           const {timeFromStart, timeFromEnd, duration} = message.timing;
 
           // TODO
@@ -84,9 +84,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
           if (!message.wasShown && (timeFromStartReached || timeFromEndReached)) {
             message.wasShown = true;
-            console.log('>>> showing message ' + message?.title);
 
-            this.showPopup({title, description});
+            this.showPopup({title, description, buttons});
 
             // TODO
             // @ts-ignore
@@ -98,10 +97,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
       const endMessage = this.config.messages.find(message => message.timing.showOnEnd);
       if (endMessage) {
-        const {title, description} = endMessage;
+        const {title, description, buttons} = endMessage;
 
         this.eventManager.listen(this.player, 'ended', () => {
-          this.showPopup({title, description});
+          this.showPopup({title, description, buttons});
 
           if (endMessage.timing.duration) {
             setTimeout(() => {
@@ -115,19 +114,20 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   filterMessages() {
     this.messages = this.config.messages.filter(message => {
-      // TODO
-      const buttonsValid =
-        !message.buttons ||
-        !message.buttons.length ||
-        !!message.buttons.filter(({label, link}) => {
+      let buttons = [];
+      if (message.buttons?.length) {
+        buttons = message.buttons.filter(({label, link}) => {
           return label && link;
-        }).length;
+        });
+      }
+
       const timingValid =
         message.timing &&
         (message.timing.showOnEnd || message.timing.showOnStart || message.timing.timeFromEnd !== -1 || message.timing.timeFromStart !== -1);
       const durationValid = !message.timing.duration || message.timing.duration > 0;
+      const contentValid = message.description || message.title || message.buttons.length;
 
-      return message.description && message.title && durationValid && timingValid && buttonsValid;
+      return durationValid && timingValid && contentValid;
     });
   }
 
@@ -137,12 +137,15 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   hideOverlay() {}
 
-  showPopup({title, description, buttons}: {title?: string; description?: string; buttons?: Array<{label: string; link: string}>}) {
+  // TODO use the api to add the component
+  // check if already registered
+
+  showPopup({title, description, buttons}: {title: string; description: string; buttons: Array<{label: string; link: string}>}) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
       mode: 'Immediate',
       position: 'InteractiveArea',
-      renderContent: () => <CallToActionPopup title={title} description={description} onClose={() => this.hidePopup()} />
+      renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
     });
   }
 

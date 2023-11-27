@@ -1,8 +1,9 @@
-.call-to-action-popup {
+@import '~@playkit-js/playkit-js-ui';
 
+.call-to-action-popup {
     background-color: rgba(0, 0, 0, 0.7); 
-    // background-color: red;
     bottom: 0;
+    border-radius: 4px;
     color: #fff;
     // height: 144px;
     padding: 16px;
@@ -32,6 +33,36 @@
     }
 
     .buttons-container {
-        margin-top: 8px;
+        margin-top: 16px;
+
+        button span {
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            display: -webkit-box; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.one-button {
+            button {
+                width: 100%;
+                // background-color: $tone-6-color;
+            }
+        }
+
+        &.two-buttons {
+            display: flex;
+            gap: 8px;
+
+            button {
+                flex-grow: 1;
+                flex-basis: 0;
+                min-width: 0;
+            }
+
+            button:first-child {
+                // background-color: $tone-6-color;
+            }
+        }
     }
 }
