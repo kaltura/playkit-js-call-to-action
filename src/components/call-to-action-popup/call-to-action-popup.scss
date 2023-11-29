@@ -35,34 +35,22 @@
     .buttons-container {
         margin-top: 16px;
 
-        button span {
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            display: -webkit-box; 
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        button {
+            width: 120px;
 
-        &.one-button {
-            button {
-                width: 100%;
-                // background-color: $tone-6-color;
+            span {
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                display: -webkit-box; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: inherit;
             }
         }
 
         &.two-buttons {
             display: flex;
             gap: 8px;
-
-            button {
-                flex-grow: 1;
-                flex-basis: 0;
-                min-width: 0;
-            }
-
-            button:first-child {
-                // background-color: $tone-6-color;
-            }
         }
     }
 }

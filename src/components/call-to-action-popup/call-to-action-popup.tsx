@@ -5,6 +5,7 @@ import {Fragment} from 'preact';
 
 import * as styles from './call-to-action-popup.scss';
 import {TextWithTooltip} from '../text-with-tooltip';
+import {ButtonWithTooltip} from '../button-with-tooltip';
 // import {KalturaPlayer} from '@playkit-js/kaltura-player-js';
 
 // TODO
@@ -58,23 +59,27 @@ const CallToActionButtons = ({buttons}: {buttons: Array<{label: string; link: st
     const [button] = buttons;
     return (
       <div className={`${styles.buttonsContainer} ${styles.oneButton}`}>
-        <Button type={ButtonType.secondary} onClick={(): void => onClick(button.link)} disabled={false}>
+        {/* <Button type={ButtonType.secondary} onClick={(): void => onClick(button.link)} disabled={false}>
           <TextWithTooltip text={button.label || ''} numberOfLines={1}></TextWithTooltip>
-        </Button>
+        </Button> */}
+        <ButtonWithTooltip type={ButtonType.secondary} label={button.label} onClick={(): void => onClick(button.link)}></ButtonWithTooltip>
       </div>
     );
   } else {
     const [button1, button2] = buttons;
     return (
       <div className={`${styles.buttonsContainer} ${styles.twoButtons}`}>
-        <Button type={ButtonType.secondary} onClick={(): void => onClick(button1.link)} disabled={false}>
+        {/* <Button type={ButtonType.secondary} onClick={(): void => onClick(button1.link)} disabled={false}>
           <Button type={ButtonType.secondary} onClick={(): void => onClick(button1.link)} disabled={false}>
             <TextWithTooltip text={button1.label || ''} numberOfLines={1}></TextWithTooltip>
           </Button>
         </Button>
         <Button type={ButtonType.primary} onClick={(): void => onClick(button2.link)} disabled={false}>
           <TextWithTooltip text={button2.label || ''} numberOfLines={1}></TextWithTooltip>
-        </Button>
+        </Button> */}
+
+        <ButtonWithTooltip type={ButtonType.secondary} label={button1.label} onClick={(): void => onClick(button1.link)}></ButtonWithTooltip>
+        <ButtonWithTooltip type={ButtonType.primary} label={button2.label} onClick={(): void => onClick(button2.link)}></ButtonWithTooltip>
       </div>
     );
   }
