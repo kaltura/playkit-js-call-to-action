@@ -409,21 +409,21 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@playkit-js/common@1.5.2-canary.0-3806c1a":
+  version "1.5.2-canary.0-3806c1a"
+  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.2-canary.0-3806c1a.tgz#8801c5864699ff29c6e77212dc80cff4c046ef05"
+  integrity sha512-qLiMA8+QKWLtC6qdWP79mth/uXjxMR8ahT5+LJ0oh+jUcnVXUboE+iETKKpDrOe7EoPc17hXwyTyD2mQaVqLDQ==
+  dependencies:
+    "@playkit-js/playkit-js-ui" "^0.77.10"
+    classnames "^2.3.2"
+    linkify-it "^4.0.1"
+
 "@playkit-js/common@^1.2.10":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.1.tgz#14edd4f01ecd16ea22016bdb68f7dd3604eb39a0"
   integrity sha512-YRJfhxZihOggy9tXOL1wm/pYChV+b+NuD9f7Y/JjVt5KIjVgeEPvPhSWSyKRv3LxbBJ4BcwYXtMe8Tg/gUmq3A==
   dependencies:
     "@playkit-js/playkit-js-ui" "^0.77.10"
-    classnames "^2.3.2"
-    linkify-it "^4.0.1"
-
-"@playkit-js/common@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.0.tgz#15995b26cef4c5de7f7f6aa37131f383c144617a"
-  integrity sha512-cJc5cl3QUxaw2FgjyW7fVJiG1b+sYrsiki/IynChKcJE5E2AKS/AXtLnUuf7sOEDrl1edNSqPIWDdMvbXgE+Cw==
-  dependencies:
-    "@playkit-js/playkit-js-ui" "^0.77.1"
     classnames "^2.3.2"
     linkify-it "^4.0.1"
 
@@ -458,7 +458,7 @@
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-providers/-/playkit-js-providers-2.39.6.tgz#b7b93b9a16df1cbcaf3fdd42f407983b2c05262b"
   integrity sha512-hU2jsRMg+2nl6zK9Fe2S/ziFM9LWp+S4Eoq9teok3uqIbxxOrTOIP3iVfYCfrUgUiIs4AOYHQI2ATT/fV6Ehpw==
 
-"@playkit-js/playkit-js-ui@0.77.9", "@playkit-js/playkit-js-ui@^0.77.1":
+"@playkit-js/playkit-js-ui@0.77.9":
   version "0.77.9"
   resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js-ui/-/playkit-js-ui-0.77.9.tgz#3b1bf1413ef2b5877fdea84be8a51b71a3cb918a"
   integrity sha512-IDa4LHg8clluQ4AOl2lwEP0NeAfe88MhACiqD+MKdJIfAMiH9Ae1ddK3umBtL0PfOzZ1W9HZ4GaNrSzamc2tTw==
