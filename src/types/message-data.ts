@@ -1,6 +1,7 @@
 interface MessageData {
   title: string;
   description: string;
+  showToast: boolean;
   buttons: {label: string; link: string}[];
   timing: {
     duration: number;

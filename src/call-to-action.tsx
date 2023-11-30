@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
-import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionPopup} from './components';
+import {CallToActionManager} from './call-to-action-manager';
 
 // import {AudioPlayerView, AudioPlayerUI} from './components';
 
@@ -13,7 +13,7 @@ interface MessageVisibilityData {
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
-  private popupInstance: FloatingItem | null = null;
+  private callToActionManager: CallToActionManager;
 
   protected static defaultConfig: CallToActionConfig = {
     messages: []
@@ -26,15 +26,20 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
+    this.callToActionManager = new CallToActionManager(player);
   }
 
-  getUIComponents() {
-    return this.floatingManager.registerUIComponents();
-  }
+  // private get bannerManager(): BannerManager {
+  //   return (this.player.getService('bannerManager') as BannerManager) || {};
+  // }
 
-  private get floatingManager(): FloatingManager {
-    return (this.player.getService('floatingManager') as FloatingManager) || {};
-  }
+  // private get toastManager(): ToastManager {
+  //   return (this.player.getService('toastManager') as ToastManager) || {};
+  // }
+
+  // private get floatingManager(): FloatingManager {
+  //   return (this.player.getService('floatingManager') as FloatingManager) || {};
+  // }
 
   static isValid() {
     return true;
@@ -48,8 +53,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       if (startMessage) {
         this.eventManager.listen(this.player, 'firstplaying', () => {
           // TODO will this be called on start over as well ?
-          const {title, description, buttons} = startMessage;
-          this.showPopup({title, description, buttons});
+          this.showMessage(startMessage);
 
           if (startMessage.timing.duration) {
             // TODO
@@ -65,7 +69,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         // TODO
         // @ts-ignore
         if (this.activeMessageEndTime !== -1 && this.player.currentTime >= this.activeMessageEndTime) {
-          this.hidePopup();
+          this.hideMessage();
           this.activeMessageEndTime = -1;
         }
 
@@ -84,8 +88,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
           if (!message.wasShown && (timeFromStartReached || timeFromEndReached)) {
             message.wasShown = true;
-
-            this.showPopup({title, description, buttons});
+            this.showMessage(message);
 
             // TODO
             // @ts-ignore
@@ -100,11 +103,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         const {title, description, buttons} = endMessage;
 
         this.eventManager.listen(this.player, 'ended', () => {
-          this.showPopup({title, description, buttons});
+          this.showMessage(endMessage);
 
           if (endMessage.timing.duration) {
             setTimeout(() => {
-              this.hidePopup();
+              this.hideMessage();
             }, endMessage.timing.duration * 1000);
           }
         });
@@ -131,32 +134,40 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     });
   }
 
-  showOverlay() {
-    // TODO show overlay on small sizes
+  //showPopup({title, description, buttons}: {title: string; description: string; buttons: Array<{label: string; link: string}>}) {
+  showMessage(message: MessageData) {
+    // this.popupInstance = this.floatingManager.add({
+    //   label: 'Call To Action Popup',
+    //   mode: 'Immediate',
+    //   position: 'InteractiveArea',
+    //   renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
+    // });
+    // this.toastManager.add({
+    //   title: 'aaa',
+    //   text: 'aaa',
+    //   icon: '',
+    //   severity: 'Error',
+    //   duration: 10000,
+    //   onClick: () => {}
+    // });
+    // this.bannerManager.add({
+    //   content: {
+    //     text: 'aaaaaaaa'
+    //   }
+    // });
+    this.callToActionManager.addMessage(message);
   }
 
-  hideOverlay() {}
-
-  // TODO use the api to add the component
-  // check if already registered
-
-  showPopup({title, description, buttons}: {title: string; description: string; buttons: Array<{label: string; link: string}>}) {
-    this.popupInstance = this.floatingManager.add({
-      label: 'Call To Action Popup',
-      mode: 'Immediate',
-      position: 'InteractiveArea',
-      renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
-    });
-  }
-
-  hidePopup() {
-    if (this.popupInstance) {
-      this.floatingManager.remove(this.popupInstance);
-    }
+  hideMessage() {
+    this.callToActionManager.removeMessage();
   }
 
   reset() {
     // TODO reset wasShown
+    this.activeMessageEndTime = -1;
+    for (const message of this.messages) {
+      message.wasShown = false;
+    }
   }
 }
 
