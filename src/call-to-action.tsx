@@ -14,7 +14,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   };
   private callToActionManager: CallToActionManager;
   private messages: (MessageData & MessageVisibilityData)[] = [];
-  private hideMessageTimeout = -1;
 
   private contribServices: ContribServices;
 
@@ -97,21 +96,9 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   showMessage(message: MessageData) {
     this.callToActionManager.addMessage(message);
-
-    if (message.timing.duration) {
-      this.hideMessageTimeout = window.setTimeout(() => {
-        this.callToActionManager.removeMessage();
-        this.hideMessageTimeout = -1;
-      }, message.timing.duration * 1000);
-    }
   }
 
   reset() {
-    if (this.hideMessageTimeout !== -1) {
-      window.clearTimeout(this.hideMessageTimeout);
-      this.hideMessageTimeout = -1;
-    }
-
     this.callToActionManager.removeMessage();
     for (const message of this.messages) {
       message.wasShown = false;

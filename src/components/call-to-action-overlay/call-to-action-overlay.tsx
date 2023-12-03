@@ -27,19 +27,17 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
             <Button type={ButtonType.borderless} size={ButtonSize.medium} tooltip={{label: closeLabel!}} ariaLabel={closeLabel} icon={'close'} />
           </A11yWrapper>
         </div>
-        <div className={styles.contentWrapper}>
-          <div className={styles.content}>
-            <div className={styles.title}>
-              <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
-            </div>
+        <div className={styles.content}>
+          <div className={styles.title}>
+            <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
+          </div>
 
-            <div className={styles.description}>
-              <TextWithTooltip text={description || ''} numberOfLines={descriptionLines}></TextWithTooltip>
-            </div>
+          <div className={styles.description}>
+            <TextWithTooltip text={description || ''} numberOfLines={descriptionLines}></TextWithTooltip>
+          </div>
 
-            <div className={styles.buttonsContainer}>
-              <CallToActionButtons buttons={buttons} onClick={onClick} />
-            </div>
+          <div className={styles.buttonsContainer}>
+            <CallToActionButtons buttons={buttons} onClick={onClick} />
           </div>
         </div>
       </div>

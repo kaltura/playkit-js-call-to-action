@@ -17,6 +17,7 @@ class CallToActionManager {
   private player: KalturaPlayer;
   private popupInstance: FloatingItem | null = null;
   private floatingManager: FloatingManager;
+  private hideMessageTimeout = -1;
 
   constructor(player: KalturaPlayer, floatingManager: FloatingManager) {
     this.player = player;
@@ -91,6 +92,7 @@ class CallToActionManager {
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
+    this.removeMessage();
   }
 
   public addMessage(message: MessageData) {
@@ -113,6 +115,13 @@ class CallToActionManager {
         }
       }
     }
+
+    if (message.timing.duration) {
+      this.hideMessageTimeout = window.setTimeout(() => {
+        this.removeMessage();
+        this.hideMessageTimeout = -1;
+      }, message.timing.duration * 1000);
+    }
   }
 
   public removeMessage() {
@@ -120,6 +129,11 @@ class CallToActionManager {
       this.hidePopup();
     } else {
       this.onOverlayCloseClick();
+    }
+
+    if (this.hideMessageTimeout !== -1) {
+      window.clearTimeout(this.hideMessageTimeout);
+      this.hideMessageTimeout = -1;
     }
   }
 }
