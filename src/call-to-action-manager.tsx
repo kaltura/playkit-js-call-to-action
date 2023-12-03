@@ -58,6 +58,7 @@ class CallToActionManager {
             buttons={buttons}
             onClick={(link: string) => this.onCallToActionButtonClick(link)}
             onClose={() => this.onOverlayCloseClick()}
+            descriptionLines={descriptionLines}
           />
         )
       })
