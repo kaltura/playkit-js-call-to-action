@@ -93,7 +93,6 @@ class CallToActionManager {
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
-    this.removeMessage();
   }
 
   public addMessage(message: MessageData) {
