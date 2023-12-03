@@ -418,15 +418,6 @@
     classnames "^2.3.2"
     linkify-it "^4.0.1"
 
-"@playkit-js/common@^1.2.10":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.1.tgz#14edd4f01ecd16ea22016bdb68f7dd3604eb39a0"
-  integrity sha512-YRJfhxZihOggy9tXOL1wm/pYChV+b+NuD9f7Y/JjVt5KIjVgeEPvPhSWSyKRv3LxbBJ4BcwYXtMe8Tg/gUmq3A==
-  dependencies:
-    "@playkit-js/playkit-js-ui" "^0.77.10"
-    classnames "^2.3.2"
-    linkify-it "^4.0.1"
-
 "@playkit-js/kaltura-player-js@3.17.0":
   version "3.17.0"
   resolved "https://registry.yarnpkg.com/@playkit-js/kaltura-player-js/-/kaltura-player-js-3.17.0.tgz#95f6a2f55d42dbc60caa71688d32b7492e4ecfe4"
@@ -485,13 +476,6 @@
   dependencies:
     js-logger "^1.6.0"
     ua-parser-js "1.0.2"
-
-"@playkit-js/ui-managers@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@playkit-js/ui-managers/-/ui-managers-1.4.1.tgz#bbdbeaecfba10c3caa53d93f28972fcdced60653"
-  integrity sha512-ifgPj2vGmx5T0iXEuKnbj/LplcC0uSUUmxuBXN76PBNfnDFqkDy/REamcdd3flg9B2Sp5XmNc7UgVpPWnkYd7Q==
-  dependencies:
-    "@playkit-js/common" "^1.2.10"
 
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
