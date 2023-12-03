@@ -1,4 +1,5 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
+import {ContribServices} from '@playkit-js/common/dist/ui-common';
 
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
@@ -15,9 +16,16 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private messages: (MessageData & MessageVisibilityData)[] = [];
   private hideMessageTimeout = -1;
 
+  private contribServices: ContribServices;
+
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.callToActionManager = new CallToActionManager(player);
+    this.contribServices = ContribServices.get({kalturaPlayer: this.player});
+    this.callToActionManager = new CallToActionManager(player, this.contribServices.floatingManager);
+  }
+
+  getUIComponents(): any[] {
+    return this.contribServices.register();
   }
 
   static isValid() {

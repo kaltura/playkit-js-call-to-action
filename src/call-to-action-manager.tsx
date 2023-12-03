@@ -1,10 +1,14 @@
 import {KalturaPlayer, ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
 
-import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
+import {FloatingManager} from '@playkit-js/common/dist/ui-common/floating-manager';
+import {FloatingItem, FloatingPositions, FloatingUIModes} from '@playkit-js/common/dist/ui-common';
 
 import {MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
+
+const DESCRIPTION_LINES_SMALL = 2;
+const DESCRIPTION_LINES_LARGE = 4;
 
 class CallToActionManager {
   private playOnClose = false;
@@ -12,21 +16,19 @@ class CallToActionManager {
   private store: any;
   private player: KalturaPlayer;
   private popupInstance: FloatingItem | null = null;
+  private floatingManager: FloatingManager;
 
-  constructor(player: KalturaPlayer) {
+  constructor(player: KalturaPlayer, floatingManager: FloatingManager) {
     this.player = player;
     this.store = ui.redux.useStore();
-  }
-
-  private get floatingManager(): FloatingManager {
-    return (this.player.getService('floatingManager') as FloatingManager) || {};
+    this.floatingManager = floatingManager;
   }
 
   private showPopup({title, description, buttons}: MessageData) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
-      mode: 'Immediate',
-      position: 'InteractiveArea',
+      mode: FloatingUIModes.Immediate,
+      position: FloatingPositions.InteractiveArea,
       renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
     });
   }
@@ -36,7 +38,7 @@ class CallToActionManager {
     this.popupInstance = null;
   }
 
-  private showOverlay(message: MessageData) {
+  private showOverlay(message: MessageData, descriptionLines: number) {
     if (!this.player.paused) {
       this.player.pause();
       this.playOnClose = true;
@@ -98,7 +100,7 @@ class CallToActionManager {
       }
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
-        this.showOverlay(message);
+        this.showOverlay(message, DESCRIPTION_LINES_SMALL);
         break;
       }
       case PLAYER_SIZE.MEDIUM:
@@ -107,7 +109,7 @@ class CallToActionManager {
         if (message.showToast) {
           this.showPopup(message);
         } else {
-          this.showOverlay(message);
+          this.showOverlay(message, DESCRIPTION_LINES_LARGE);
         }
       }
     }

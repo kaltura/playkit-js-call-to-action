@@ -15,10 +15,11 @@ interface CallToActionOverlayProps {
   onClose: () => void;
   onClick: (link: string) => void;
   closeLabel: string;
+  descriptionLines: number;
 }
 
 const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
-  ({title, description, buttons, onClose, onClick, closeLabel}: CallToActionOverlayProps) => {
+  ({title, description, buttons, onClose, onClick, closeLabel, descriptionLines}: CallToActionOverlayProps) => {
     return (
       <div className={styles.callToActionOverlay}>
         <div className={styles.closeButton}>
@@ -26,17 +27,19 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
             <Button type={ButtonType.borderless} size={ButtonSize.medium} tooltip={{label: closeLabel!}} ariaLabel={closeLabel} icon={'close'} />
           </A11yWrapper>
         </div>
-        <div className={styles.content}>
-          <div className={styles.title}>
-            <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
-          </div>
+        <div className={styles.contentWrapper}>
+          <div className={styles.content}>
+            <div className={styles.title}>
+              <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
+            </div>
 
-          <div className={styles.description}>
-            <TextWithTooltip text={description || ''} numberOfLines={2}></TextWithTooltip>
-          </div>
+            <div className={styles.description}>
+              <TextWithTooltip text={description || ''} numberOfLines={descriptionLines}></TextWithTooltip>
+            </div>
 
-          <div className={styles.buttonsContainer}>
-            <CallToActionButtons buttons={buttons} onClick={onClick} />
+            <div className={styles.buttonsContainer}>
+              <CallToActionButtons buttons={buttons} onClick={onClick} />
+            </div>
           </div>
         </div>
       </div>
