@@ -15,12 +15,20 @@
     &.large {
         .content {
             max-width: 600px;
+
+            button {
+                width: 160px;
+            }
         }
     }
 
     &.medium {
         .content {
             max-width: min(calc(100% - 48px), 600px);
+
+            button {
+                width: 160px;
+            }
         }
     }
 
@@ -31,6 +39,10 @@
             .title {
                 font-size: 18px;
                 line-height: 20px;
+            }
+
+            button {
+                width: 128px;
             }
         }
     }
@@ -77,7 +89,6 @@
 
             button {
                 margin: 0 8px;
-                width: 160px;
             }
         }
     }
