@@ -1,45 +1,24 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
 
 import {CallToActionConfig, MessageData} from './types';
-import {CallToActionPopup} from './components';
 import {CallToActionManager} from './call-to-action-manager';
-
-// import {AudioPlayerView, AudioPlayerUI} from './components';
 
 interface MessageVisibilityData {
   wasShown?: boolean;
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
-  private callToActionManager: CallToActionManager;
-
   protected static defaultConfig: CallToActionConfig = {
     messages: []
   };
-
-  messages: (MessageData & MessageVisibilityData)[] = [];
-  //activeMessage: MessageData | null = null;
-  activeMessageEndTime = -1;
-  //activeMessageStartTime = -1;
+  private callToActionManager: CallToActionManager;
+  private messages: (MessageData & MessageVisibilityData)[] = [];
+  private hideMessageTimeout = -1;
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
     this.callToActionManager = new CallToActionManager(player);
   }
-
-  // private get bannerManager(): BannerManager {
-  //   return (this.player.getService('bannerManager') as BannerManager) || {};
-  // }
-
-  // private get toastManager(): ToastManager {
-  //   return (this.player.getService('toastManager') as ToastManager) || {};
-  // }
-
-  // private get floatingManager(): FloatingManager {
-  //   return (this.player.getService('floatingManager') as FloatingManager) || {};
-  // }
 
   static isValid() {
     return true;
@@ -51,48 +30,30 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     if (this.messages.length) {
       const startMessage = this.config.messages.find(message => message.timing.showOnStart);
       if (startMessage) {
+        const {duration} = startMessage.timing;
         this.eventManager.listen(this.player, 'firstplaying', () => {
-          // TODO will this be called on start over as well ?
           this.showMessage(startMessage);
-
-          if (startMessage.timing.duration) {
-            // TODO
-            // @ts-ignore
-            this.activeMessageEndTime = this.player.currentTime + startMessage.timing.duration;
-          }
         });
       }
 
       const midMessages = this.messages.filter(message => message.timing.timeFromEnd > -1 || message.timing.timeFromStart > -1);
 
       this.eventManager.listen(this.player, 'timeupdate', () => {
-        // TODO
-        // @ts-ignore
-        if (this.activeMessageEndTime !== -1 && this.player.currentTime >= this.activeMessageEndTime) {
-          this.hideMessage();
-          this.activeMessageEndTime = -1;
-        }
-
         // if there is a message that should be shown, show it
         for (const message of midMessages) {
-          const {title, description, buttons} = message;
           const {timeFromStart, timeFromEnd, duration} = message.timing;
 
-          // TODO
+          // TODO use updated player types
           // @ts-ignore
           const timeFromStartReached = timeFromStart && this.player.currentTime >= timeFromStart;
 
-          // TODO
+          // TODO use updated player types
           // @ts-ignore
-          const timeFromEndReached = timeFromEnd && message.timing.timeFromEnd >= this.player.duration - this.player.currentTime;
+          const timeFromEndReached = timeFromEnd && timeFromEnd >= this.player.duration - this.player.currentTime;
 
           if (!message.wasShown && (timeFromStartReached || timeFromEndReached)) {
             message.wasShown = true;
             this.showMessage(message);
-
-            // TODO
-            // @ts-ignore
-            this.activeMessageEndTime = this.player.currentTime + duration;
             break;
           }
         }
@@ -100,16 +61,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
       const endMessage = this.config.messages.find(message => message.timing.showOnEnd);
       if (endMessage) {
-        const {title, description, buttons} = endMessage;
-
         this.eventManager.listen(this.player, 'ended', () => {
           this.showMessage(endMessage);
-
-          if (endMessage.timing.duration) {
-            setTimeout(() => {
-              this.hideMessage();
-            }, endMessage.timing.duration * 1000);
-          }
         });
       }
     }
@@ -134,37 +87,24 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     });
   }
 
-  //showPopup({title, description, buttons}: {title: string; description: string; buttons: Array<{label: string; link: string}>}) {
   showMessage(message: MessageData) {
-    // this.popupInstance = this.floatingManager.add({
-    //   label: 'Call To Action Popup',
-    //   mode: 'Immediate',
-    //   position: 'InteractiveArea',
-    //   renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
-    // });
-    // this.toastManager.add({
-    //   title: 'aaa',
-    //   text: 'aaa',
-    //   icon: '',
-    //   severity: 'Error',
-    //   duration: 10000,
-    //   onClick: () => {}
-    // });
-    // this.bannerManager.add({
-    //   content: {
-    //     text: 'aaaaaaaa'
-    //   }
-    // });
     this.callToActionManager.addMessage(message);
-  }
 
-  hideMessage() {
-    this.callToActionManager.removeMessage();
+    if (message.timing.duration) {
+      this.hideMessageTimeout = window.setTimeout(() => {
+        this.callToActionManager.removeMessage();
+        this.hideMessageTimeout = -1;
+      }, message.timing.duration * 1000);
+    }
   }
 
   reset() {
-    // TODO reset wasShown
-    this.activeMessageEndTime = -1;
+    if (this.hideMessageTimeout !== -1) {
+      window.clearTimeout(this.hideMessageTimeout);
+      this.hideMessageTimeout = -1;
+    }
+
+    this.callToActionManager.removeMessage();
     for (const message of this.messages) {
       message.wasShown = false;
     }

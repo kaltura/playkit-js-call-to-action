@@ -1,13 +1,10 @@
 import {KalturaPlayer, ui} from '@playkit-js/kaltura-player-js';
-import {FloatingItem, FloatingManager, ToastManager, BannerManager} from '@playkit-js/ui-managers';
+const {PLAYER_SIZE} = ui.Components;
+
+import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
 import {MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
-
-// TODO
-// @ts-ignore
-const {components, redux} = ui;
-const {PLAYER_SIZE} = components;
 
 class CallToActionManager {
   private playOnClose = false;
@@ -18,7 +15,7 @@ class CallToActionManager {
 
   constructor(player: KalturaPlayer) {
     this.player = player;
-    this.store = redux.useStore();
+    this.store = ui.redux.useStore();
   }
 
   private get floatingManager(): FloatingManager {
@@ -36,6 +33,7 @@ class CallToActionManager {
 
   private hidePopup() {
     this.floatingManager.remove(this.popupInstance!);
+    this.popupInstance = null;
   }
 
   private showOverlay(message: MessageData) {
@@ -55,7 +53,7 @@ class CallToActionManager {
             title={title}
             description={description}
             buttons={buttons}
-            onClick={() => this.onCallToActionButtonClick}
+            onClick={(link: string) => this.onCallToActionButtonClick(link)}
             onClose={() => this.onOverlayCloseClick()}
           />
         )
@@ -84,10 +82,10 @@ class CallToActionManager {
   }
 
   private onCallToActionButtonClick(link: string) {
-    // TODO fire an event
     if (link.startsWith('http://') || link.startsWith('https://')) {
       window.open(link, '_blank');
     } else {
+      // TODO use updated player types
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }

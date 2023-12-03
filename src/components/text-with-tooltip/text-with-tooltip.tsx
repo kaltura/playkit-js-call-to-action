@@ -1,10 +1,8 @@
-import * as styles from './text-with-tooltip.scss';
-
 import {useState, useRef, useLayoutEffect} from 'preact/hooks';
+import {ui} from '@playkit-js/kaltura-player-js';
+const {Tooltip} = ui.Components;
 
-// TODO
-// @ts-ignore
-const {Tooltip} = window.KalturaPlayer.ui.components;
+import * as styles from './text-with-tooltip.scss';
 
 const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: number}) => {
   const comparisonTextRef = useRef(null);
@@ -16,17 +14,10 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
   useLayoutEffect(() => {
     if (textRef?.current && comparisonTextRef?.current) {
       setIsFinalized(true);
-
-      // TODO
       // @ts-ignore
       const textHeight = textRef?.current?.getBoundingClientRect().height;
-
-      // TODO
       // @ts-ignore
       const comparisonTextHeight = comparisonTextRef?.current?.getBoundingClientRect().height;
-
-      // TODO
-      // @ts-ignore
       setShowTooltip(textHeight < comparisonTextHeight);
     }
   }, [isFinalized]);
@@ -53,32 +44,6 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
   if (!text) return <></>;
 
   return <div className={styles.textWithTooltip}>{showTooltip ? <Tooltip label={text}>{content}</Tooltip> : content}</div>;
-
-  // return (
-  //     !isFinalized ?
-
-  //     <div className={styles.TextWithTooltip}>
-  //     <div ref={textRef} style={{'-webkit-line-clamp': numberOfLines}} className={styles.expandableText}>
-  //     {text}
-  //     </div>
-  //     {!isFinalized ? (
-  //         <div ref={comparisonTextRef} style={{'-webkit-line-clamp': numberOfLines + 1}} className={styles.expandableText}>
-  //         {text}
-  //         </div>
-  //         ) : undefined}
-  //         </div>
-  //         );
-
-  //         return <div className={styles.textWithTooltip}>
-  //         {
-  //             !isFinalized ?
-  //             <>
-  //             <div ref={textRef} style={{'-webkit-line-clamp': numberOfLines}} className={styles.expandableText}>
-  //             {text}
-  //             </div>
-  //             </> : <></>
-  //         }
-  //         </div>
 };
 
 export {TextWithTooltip};

@@ -36,21 +36,8 @@
         margin-top: 16px;
 
         button {
+            margin: 0 4px;
             width: 120px;
-
-            span {
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 1;
-                display: -webkit-box; 
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: inherit;
-            }
-        }
-
-        &.two-buttons {
-            display: flex;
-            gap: 8px;
         }
     }
 }

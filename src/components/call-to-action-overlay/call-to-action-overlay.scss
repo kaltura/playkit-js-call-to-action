@@ -6,24 +6,50 @@
     top: 0;
     width: 100%;
 
-    .content-container {
+    .close-button {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+
+    .content {
+        color: white;
+        position: absolute;
+        left: calc(50% - 300px);
+        top: 217px;
+        width: 600px;
+
         .title {
             font-size: 32px;
             line-height: 32px;
+            padding-bottom: 8px;
+            position: relative;
+
+            &:hover {
+                z-index: 1;
+            }
         }
 
         .description {
             font-size: 16px;
             line-height: 21px;
+            position: relative;
+
+            &:hover {
+                z-index: 1;
+            }
         }
 
         .buttons-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
 
+            button {
+                margin: 0 8px;
+                width: 160px;
+            }
         }
-    }
-
-    &.tiny {
-
     }
 
     &.small {
