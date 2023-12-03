@@ -12,15 +12,22 @@
         top: 8px;
     }
 
+    .content-wrapper {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+    }
+
     .content {
         color: white;
-        position: absolute;
-        left: calc(50% - 300px);
-        top: 217px;
+        height: fit-content;
         width: 600px;
 
         .title {
             font-size: 32px;
+            height: fit-content;
             line-height: 32px;
             padding-bottom: 8px;
             position: relative;
