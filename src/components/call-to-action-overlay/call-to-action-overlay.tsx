@@ -9,11 +9,12 @@ import {TextWithTooltip} from '../text-with-tooltip';
 import {CallToActionButtons} from '../call-to-action-buttons';
 
 import * as styles from './call-to-action-overlay.scss';
+import {MessageButtonData} from '../../types';
 
 interface CallToActionOverlayProps {
   title: string;
   description: string;
-  buttons: Array<{label: string; link: string}>;
+  buttons: MessageButtonData[];
   onClose: () => void;
   onClick: (link: string) => void;
   closeLabel: string;

@@ -6,10 +6,11 @@ import {TextWithTooltip} from '../text-with-tooltip';
 import {CallToActionButtons} from '../call-to-action-buttons';
 
 import * as styles from './call-to-action-popup.scss';
+import {MessageButtonData} from '../../types';
 interface CallToActionPopupProps {
   title: string;
   description: string;
-  buttons: Array<{label: string; link: string}>;
+  buttons: MessageButtonData[];
   onClick: (link: string) => void;
   onClose: () => void;
   closeLabel: string;

@@ -1,8 +1,19 @@
+enum MessageButtonType {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary'
+}
+
+interface MessageButtonData {
+  label: string;
+  link: string;
+  type: MessageButtonType;
+}
+
 interface MessageData {
   title: string;
   description: string;
   showToast: boolean;
-  buttons: {label: string; link: string}[];
+  buttons: MessageButtonData[];
   timing: {
     duration: number;
     showOnStart: boolean;
@@ -12,4 +23,4 @@ interface MessageData {
   };
 }
 
-export {MessageData};
+export {MessageData, MessageButtonData, MessageButtonType};
