@@ -17,6 +17,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   private contribServices: ContribServices;
 
+  private messagesFiltered = false;
+
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
     this.contribServices = ContribServices.get({kalturaPlayer: this.player});
@@ -32,7 +34,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   }
 
   protected loadMedia(): void {
-    this.filterMessages();
+    if (!this.messagesFiltered) {
+      this.filterMessages();
+      this.messagesFiltered = true;
+    }
 
     if (this.messages.length) {
       const startMessage = this.config.messages.find(message => message.timing.showOnStart);
