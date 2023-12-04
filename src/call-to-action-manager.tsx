@@ -57,7 +57,7 @@ class CallToActionManager {
             description={description}
             buttons={buttons}
             onClick={(link: string) => this.onCallToActionButtonClick(link)}
-            onClose={this.onOverlayCloseClick}
+            onClose={() => this.onOverlayCloseClick()}
             descriptionLines={descriptionLines}
           />
         )
@@ -78,8 +78,6 @@ class CallToActionManager {
   }
 
   private onOverlayCloseClick() {
-    // debugger;
-
     this.removeOverlay();
     if (this.playOnClose) {
       this.player.play();
