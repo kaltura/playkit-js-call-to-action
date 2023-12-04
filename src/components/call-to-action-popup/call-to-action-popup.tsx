@@ -21,9 +21,14 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
     return (
       <div className={styles.callToActionPopup}>
         <div className={styles.closeButton}>
-          <A11yWrapper onClick={onClose}>
-            <Button type={ButtonType.borderless} size={ButtonSize.medium} tooltip={{label: closeLabel!}} ariaLabel={closeLabel} icon={'close'} />
-          </A11yWrapper>
+          <Button
+            onClick={onClose}
+            type={ButtonType.borderlessTranslucent}
+            size={ButtonSize.medium}
+            tooltip={{label: closeLabel!}}
+            ariaLabel={closeLabel}
+            icon={'close'}
+          />
         </div>
 
         <div className={styles.title}>

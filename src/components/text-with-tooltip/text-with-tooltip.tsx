@@ -41,7 +41,7 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
     textElement
   );
 
-  if (!text) return <></>;
+  if (!text) return null;
 
   return <div className={styles.textWithTooltip}>{showTooltip ? <Tooltip label={text}>{content}</Tooltip> : content}</div>;
 };
