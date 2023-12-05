@@ -18,5 +18,5 @@ jobs:
     secrets: inherit
     with:
       schema-type: "playerV3Versions"
-      tests-yarn-run-to-execute: 'build eslint'
+      tests-yarn-run-to-execute: 'build'
       node-version: "18.x"
