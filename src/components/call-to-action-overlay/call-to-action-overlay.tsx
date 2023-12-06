@@ -57,7 +57,7 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
   connect(mapStateToProps)(
     ({title, description, buttons, onClose, onClick, closeLabel, descriptionLines, sizeClass}: CallToActionOverlayProps): any => {
       return (
-        <div className={`${styles.callToActionOverlay} ${sizeClass}`}>
+        <div data-testid="call-to-action-overlay" className={`${styles.callToActionOverlay} ${sizeClass}`}>
           <div className={styles.closeButton}>
             <Button
               onClick={onClose}
