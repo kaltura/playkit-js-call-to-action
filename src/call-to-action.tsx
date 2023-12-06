@@ -40,7 +40,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     }
 
     if (this.messages.length) {
-      const startMessage = this.config.messages.find(message => message.timing.showOnStart);
+      const startMessage = this.messages.find(message => message.timing.showOnStart);
       if (startMessage) {
         const {duration} = startMessage.timing;
         this.eventManager.listen(this.player, 'firstplaying', () => {
@@ -71,7 +71,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         }
       });
 
-      const endMessage = this.config.messages.find(message => message.timing.showOnEnd);
+      const endMessage = this.messages.find(message => message.timing.showOnEnd);
       if (endMessage) {
         this.eventManager.listen(this.player, 'ended', () => {
           this.showMessage(endMessage);
@@ -81,22 +81,30 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   }
 
   filterMessages() {
-    this.messages = this.config.messages.filter(message => {
-      let buttons = [];
-      if (message.buttons?.length) {
-        buttons = message.buttons.filter(({label, link}) => {
-          return label && link;
-        });
-      }
+    this.messages = this.config.messages
+      .map(message => {
+        const {buttons} = message;
+        return {
+          ...message,
+          buttons: buttons
+            ? buttons.filter(button => {
+                return button.label && typeof button.label === 'string' && button.link && typeof button.link === 'string';
+              })
+            : []
+        };
+      })
+      .filter(message => {
+        const timingValid =
+          message.timing &&
+          (message.timing.showOnStart === true ||
+            message.timing.showOnEnd === true ||
+            message.timing.timeFromStart >= 0 ||
+            message.timing.timeFromEnd >= 0);
+        const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
+        const contentValid = message.description || message.title || message.buttons.length;
 
-      const timingValid =
-        message.timing &&
-        (message.timing.showOnEnd || message.timing.showOnStart || message.timing.timeFromEnd !== -1 || message.timing.timeFromStart !== -1);
-      const durationValid = !message.timing.duration || message.timing.duration > 0;
-      const contentValid = message.description || message.title || message.buttons.length;
-
-      return durationValid && timingValid && contentValid;
-    });
+        return durationValid && timingValid && contentValid;
+      });
   }
 
   showMessage(message: MessageData) {
