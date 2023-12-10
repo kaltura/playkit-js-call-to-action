@@ -40,34 +40,87 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     }
 
     if (this.messages.length) {
-      this.eventManager.listen(this.player, 'timeupdate', () => {
-        // TODO use updated player types
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const currentTime = this.player.currentTime;
+      this.eventManager.listen(this.player, this.player.Event.Core.TIME_UPDATE, () => this.onTimeUpdate());
+      this.eventManager.listen(this.player, this.player.Event.Core.SEEKED, () => this.onSeeked());
+    }
+  }
 
-        if (this.activeMessageEndTime !== -1 && currentTime >= this.activeMessageEndTime) {
-          this.callToActionManager.removeMessage();
-          this.activeMessageEndTime = -1;
+  private onTimeUpdate() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+
+    this.hideActiveMessage();
+
+    for (let i = this.messages.length - 1; i >= 0; --i) {
+      const message = this.messages[i];
+
+      if (this.activeMessage && this.compareMessagesByTiming(message, this.activeMessage) < 0) {
+        break;
+      }
+
+      if (!message.wasShown && this.isMessageInTimeRange(message)) {
+        const remainingDuration = this.getRemainingDuration(message);
+        if (remainingDuration) {
+          this.activeMessageEndTime = currentTime + remainingDuration;
         }
+        this.showMessage(message, remainingDuration);
+        break;
+      }
+    }
+  }
 
-        for (let i = this.messages.length - 1; i >= 0; --i) {
-          const message = this.messages[i];
+  private onSeeked() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
 
-          if (this.activeMessage && this.compareMessageTiming(message, this.activeMessage) < 0) {
-            break;
-          }
+    this.hideActiveMessage();
 
-          if (!message.wasShown && this.isMessageInTimeRange(message)) {
-            const remainingDuration = this.getRemainingDuration(message);
-            if (remainingDuration) {
-              this.activeMessageEndTime = currentTime + remainingDuration;
-            }
-            this.showMessage(message, remainingDuration);
-            break;
-          }
+    for (const message of this.messages) {
+      if (message.timing.showMessageOnSeek) {
+        message.wasShown = false;
+      }
+    }
+
+    for (let i = this.messages.length - 1; i >= 0; --i) {
+      const message = this.messages[i];
+
+      if (message.wasShown || !this.isMessageInTimeRange(message)) {
+        continue;
+      }
+
+      if (!message.timing.duration) {
+        if (!this.callToActionManager.isOverlayMessage(message)) {
+          this.showMessage(message);
+          break;
         }
-      });
+      } else {
+        const remainingDuration = this.getRemainingDuration(message);
+        if (remainingDuration) {
+          this.activeMessageEndTime = currentTime + remainingDuration;
+          this.showMessage(message, remainingDuration);
+          break;
+        }
+      }
+    }
+  }
+
+  private hideActiveMessage() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+
+    if (
+      this.activeMessage &&
+      ((this.activeMessageEndTime !== -1 && this.activeMessageEndTime <= currentTime) ||
+        this.compareMessagesByTiming({timing: {timeFromStart: currentTime}}, this.activeMessage) < 0)
+    ) {
+      this.callToActionManager.removeMessage();
+      this.activeMessageEndTime = -1;
     }
   }
 
@@ -89,17 +142,17 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
           message.timing &&
           (message.timing.showOnStart === true ||
             message.timing.showOnEnd === true ||
-            message.timing.timeFromStart >= 0 ||
-            message.timing.timeFromEnd >= 0);
+            (message.timing.timeFromStart !== undefined && message.timing.timeFromStart >= 0) ||
+            (message.timing.timeFromEnd !== undefined && message.timing.timeFromEnd >= 0));
         const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
         const contentValid = message.description || message.title || message.buttons.length;
 
         return durationValid && timingValid && contentValid;
       })
-      .sort((messageA: MessageData, messageB: MessageData) => this.compareMessageTiming(messageA, messageB));
+      .sort((messageA: MessageData, messageB: MessageData) => this.compareMessagesByTiming(messageA, messageB));
   }
 
-  private compareMessageTiming(messageA: MessageData, messageB: MessageData) {
+  private compareMessagesByTiming(messageA: MessageData, messageB: MessageData) {
     if (messageA.timing.showOnEnd || messageB.timing.showOnStart) {
       return 1;
     }
@@ -111,10 +164,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const videoDuration = this.player.duration;
-    const messageAStartTime = messageA.timing.timeFromStart || videoDuration - messageA.timing.timeFromEnd;
-    const messageBStartTime = messageB.timing.timeFromStart || videoDuration - messageB.timing.timeFromEnd;
+    const messageAStartTime = messageA.timing.timeFromEnd ? videoDuration - messageA.timing.timeFromEnd : messageA.timing.timeFromStart;
+    const messageBStartTime = messageB.timing.timeFromEnd ? videoDuration - messageB.timing.timeFromEnd : messageB.timing.timeFromStart;
 
-    return messageAStartTime - messageBStartTime;
+    return messageAStartTime! - messageBStartTime!;
   }
 
   private showMessage(message: MessageDataWithTracking, duration?: number) {

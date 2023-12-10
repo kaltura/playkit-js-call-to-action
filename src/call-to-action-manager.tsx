@@ -105,6 +105,14 @@ class CallToActionManager {
     }
   }
 
+  public isOverlayMessage(message: MessageData) {
+    return (
+      !message.showToast ||
+      this.store.getState().shell.playerSize === PLAYER_SIZE.EXTRA_SMALL ||
+      this.store.getState().shell.playerSize === PLAYER_SIZE.SMALL
+    );
+  }
+
   public addMessage(message: MessageData, duration?: number) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {

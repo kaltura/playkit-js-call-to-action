@@ -10,17 +10,17 @@ interface MessageButtonData {
 }
 
 interface MessageData {
-  title: string;
-  description: string;
-  showToast: boolean;
-  buttons: MessageButtonData[];
+  title?: string;
+  description?: string;
+  showToast?: boolean;
+  buttons?: MessageButtonData[];
   timing: {
-    showMessageOnSeek: boolean;
-    duration: number;
-    showOnStart: boolean;
-    showOnEnd: boolean;
-    timeFromStart: number;
-    timeFromEnd: number;
+    showMessageOnSeek?: boolean;
+    duration?: number;
+    showOnStart?: boolean;
+    showOnEnd?: boolean;
+    timeFromStart?: number;
+    timeFromEnd?: number;
   };
 }
 
