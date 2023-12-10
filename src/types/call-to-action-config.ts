@@ -1,7 +1,7 @@
-import { MessageData } from "./message-data";
+import {MessageData} from './message-data';
 
 interface CallToActionConfig {
-    messages: MessageData[];
+  messages: MessageData[];
 }
 
 export {CallToActionConfig};

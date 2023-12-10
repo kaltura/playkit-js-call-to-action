@@ -15,6 +15,7 @@ interface MessageData {
   showToast: boolean;
   buttons: MessageButtonData[];
   timing: {
+    showMessageOnSeek: boolean;
     duration: number;
     showOnStart: boolean;
     showOnEnd: boolean;

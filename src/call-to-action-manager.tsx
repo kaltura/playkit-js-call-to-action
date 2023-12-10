@@ -90,12 +90,22 @@ class CallToActionManager {
       window.open(link, '_blank');
     } else {
       // TODO use updated player types
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
   }
 
-  public addMessage(message: MessageData) {
+  private hideMessageAfterDuration(duration?: number) {
+    if (duration) {
+      this.hideMessageTimeout = window.setTimeout(() => {
+        this.removeMessage();
+        this.hideMessageTimeout = -1;
+      }, duration * 1000);
+    }
+  }
+
+  public addMessage(message: MessageData, duration?: number) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {
         return;
@@ -103,6 +113,7 @@ class CallToActionManager {
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
         this.showOverlay(message, DESCRIPTION_LINES_SMALL);
+        this.hideMessageAfterDuration(duration);
         break;
       }
       case PLAYER_SIZE.MEDIUM:
@@ -110,17 +121,14 @@ class CallToActionManager {
       case PLAYER_SIZE.EXTRA_LARGE: {
         if (message.showToast) {
           this.showPopup(message);
+          if (message.timing.showOnEnd) {
+            this.hideMessageAfterDuration(duration);
+          }
         } else {
           this.showOverlay(message, DESCRIPTION_LINES_LARGE);
+          this.hideMessageAfterDuration(duration);
         }
       }
-    }
-
-    if (message.timing.duration) {
-      this.hideMessageTimeout = window.setTimeout(() => {
-        this.removeMessage();
-        this.hideMessageTimeout = -1;
-      }, message.timing.duration * 1000);
     }
   }
 
