@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@playkit-js/kaltura-player-js": "3.17.0",
-    "@playkit-js/ui-managers": "^1.4.2",
+    "@playkit-js/ui-managers": "1.4.3-canary.0-4660a3f",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
