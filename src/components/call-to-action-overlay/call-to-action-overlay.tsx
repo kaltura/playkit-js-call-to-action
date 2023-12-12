@@ -1,4 +1,4 @@
-import {Button, ButtonType, ButtonSize, A11yWrapper} from '@playkit-js/common';
+import {Button, ButtonType, ButtonSize} from '@playkit-js/common';
 
 import {ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
@@ -70,11 +70,11 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
           </div>
           <div className={styles.content}>
             <div className={styles.title}>
-              <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
+              <TextWithTooltip text={title || ''} numberOfLines={1} />
             </div>
 
             <div className={styles.description}>
-              <TextWithTooltip text={description || ''} numberOfLines={descriptionLines}></TextWithTooltip>
+              <TextWithTooltip text={description || ''} numberOfLines={descriptionLines} />
             </div>
 
             <div className={styles.buttonsContainer}>
