@@ -1,8 +1,7 @@
 import {KalturaPlayer, ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
 
-import {FloatingManager} from '@playkit-js/common/dist/ui-common/floating-manager';
-import {FloatingItem, FloatingPositions, FloatingUIModes} from '@playkit-js/common/dist/ui-common';
+import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
 import {MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
@@ -28,8 +27,8 @@ class CallToActionManager {
   private showPopup({title, description, buttons}: MessageData) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
-      mode: FloatingUIModes.Immediate,
-      position: FloatingPositions.InteractiveArea,
+      mode: 'Immediate',
+      position: 'InteractiveArea',
       renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
     });
   }
