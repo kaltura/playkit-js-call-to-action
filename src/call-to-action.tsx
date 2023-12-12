@@ -1,6 +1,5 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
-import {ContribServices} from '@playkit-js/common/dist/ui-common';
-
+import {FloatingManager} from '@playkit-js/ui-managers';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 
@@ -14,23 +13,22 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   };
   private callToActionManager: CallToActionManager;
   private messages: MessageDataWithTracking[] = [];
-  private contribServices: ContribServices;
+
   private messagesFiltered = false;
   private activeMessage: MessageData | null = null;
   private activeMessageEndTime = -1;
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.contribServices = ContribServices.get({kalturaPlayer: this.player});
-    this.callToActionManager = new CallToActionManager(player, this.contribServices.floatingManager);
-  }
-
-  public getUIComponents(): any[] {
-    return this.contribServices.register();
+    this.callToActionManager = new CallToActionManager(player, this.floatingManager);
   }
 
   static isValid() {
     return true;
+  }
+
+  private get floatingManager(): FloatingManager {
+    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   protected loadMedia(): void {
