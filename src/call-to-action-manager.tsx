@@ -90,6 +90,7 @@ class CallToActionManager {
       window.open(link, '_blank');
     } else {
       // TODO use updated player types
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
