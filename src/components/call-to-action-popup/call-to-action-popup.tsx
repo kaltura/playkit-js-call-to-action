@@ -1,4 +1,4 @@
-import {Button, ButtonType, ButtonSize, A11yWrapper} from '@playkit-js/common';
+import {Button, ButtonType, ButtonSize} from '@playkit-js/common';
 import {ui} from '@playkit-js/kaltura-player-js';
 const {withText} = ui.preacti18n;
 
@@ -32,10 +32,10 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
         </div>
 
         <div className={styles.title}>
-          <TextWithTooltip text={title || ''} numberOfLines={1}></TextWithTooltip>
+          <TextWithTooltip text={title || ''} numberOfLines={1} />
         </div>
         <div className={styles.description}>
-          <TextWithTooltip text={description || ''} numberOfLines={2}></TextWithTooltip>
+          <TextWithTooltip text={description || ''} numberOfLines={2} />
         </div>
 
         <div className={styles.buttonsContainer}>

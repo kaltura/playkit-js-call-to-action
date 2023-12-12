@@ -42,7 +42,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     if (this.messages.length) {
       const startMessage = this.config.messages.find(message => message.timing.showOnStart);
       if (startMessage) {
-        const {duration} = startMessage.timing;
         this.eventManager.listen(this.player, 'firstplaying', () => {
           this.showMessage(startMessage);
         });
@@ -53,13 +52,15 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       this.eventManager.listen(this.player, 'timeupdate', () => {
         // if there is a message that should be shown, show it
         for (const message of midMessages) {
-          const {timeFromStart, timeFromEnd, duration} = message.timing;
+          const {timeFromStart, timeFromEnd} = message.timing;
 
           // TODO use updated player types
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const timeFromStartReached = timeFromStart && this.player.currentTime >= timeFromStart;
 
           // TODO use updated player types
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const timeFromEndReached = timeFromEnd && timeFromEnd >= this.player.duration - this.player.currentTime;
 
@@ -82,13 +83,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   filterMessages() {
     this.messages = this.config.messages.filter(message => {
-      let buttons = [];
-      if (message.buttons?.length) {
-        buttons = message.buttons.filter(({label, link}) => {
-          return label && link;
-        });
-      }
-
       const timingValid =
         message.timing &&
         (message.timing.showOnEnd || message.timing.showOnStart || message.timing.timeFromEnd !== -1 || message.timing.timeFromStart !== -1);

@@ -1,4 +1,3 @@
-import {Fragment} from 'preact';
 import {ButtonType} from '@playkit-js/common';
 import {ButtonWithTooltip} from '../button-with-tooltip';
 
@@ -14,7 +13,7 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
     return (
       <div className={`${styles.callToActionButtons}`}>
-        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button.link)}></ButtonWithTooltip>
+        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button.link)} />
       </div>
     );
   }
@@ -25,8 +24,8 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
   return (
     <div className={`${styles.callToActionButtons} ${styles.twoButtons}`}>
-      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1.link)}></ButtonWithTooltip>
-      <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2.link)}></ButtonWithTooltip>
+      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1.link)} />
+      <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2.link)} />
     </div>
   );
 };
