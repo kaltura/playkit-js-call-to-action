@@ -5,6 +5,7 @@ import {CallToActionManager} from './call-to-action-manager';
 
 interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
+  wasDismissed?: boolean;
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
@@ -78,7 +79,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     this.hideActiveMessage();
 
     for (const message of this.messages) {
-      if (message.timing.showMessageOnSeek) {
+      if (message.timing.redisplayMessage || !message.wasDismissed) {
         message.wasShown = false;
       }
     }
@@ -90,19 +91,13 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         continue;
       }
 
-      if (!message.timing.duration) {
-        if (!this.callToActionManager.isOverlayMessage(message)) {
-          this.showMessage(message);
-          break;
-        }
-      } else {
-        const remainingDuration = this.getRemainingDuration(message);
-        if (remainingDuration) {
-          this.activeMessageEndTime = currentTime + remainingDuration;
-          this.showMessage(message, remainingDuration);
-          break;
-        }
+      const remainingDuration = this.getRemainingDuration(message);
+      if (remainingDuration) {
+        this.activeMessageEndTime = currentTime + remainingDuration;
       }
+
+      this.showMessage(message, remainingDuration);
+      break;
     }
   }
 
@@ -171,7 +166,13 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
-    this.callToActionManager.addMessage(message, duration);
+    this.callToActionManager.addMessage({
+      message,
+      duration,
+      onClose: () => {
+        message.wasDismissed = true;
+      }
+    });
   }
 
   private getRemainingDuration(message: MessageData) {
@@ -224,6 +225,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     this.callToActionManager.removeMessage();
     for (const message of this.messages) {
       message.wasShown = false;
+      message.wasDismissed = false;
     }
   }
 }
