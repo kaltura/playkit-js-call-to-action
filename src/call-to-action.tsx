@@ -1,6 +1,5 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
-import {ContribServices} from '@playkit-js/common/dist/ui-common';
-
+import {FloatingManager} from '@playkit-js/ui-managers';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 
@@ -15,22 +14,19 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private callToActionManager: CallToActionManager;
   private messages: (MessageData & MessageVisibilityData)[] = [];
 
-  private contribServices: ContribServices;
-
   private messagesFiltered = false;
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.contribServices = ContribServices.get({kalturaPlayer: this.player});
-    this.callToActionManager = new CallToActionManager(player, this.contribServices.floatingManager);
-  }
-
-  getUIComponents(): any[] {
-    return this.contribServices.register();
+    this.callToActionManager = new CallToActionManager(player, this.floatingManager);
   }
 
   static isValid() {
     return true;
+  }
+
+  private get floatingManager(): FloatingManager {
+    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   protected loadMedia(): void {
@@ -42,7 +38,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     if (this.messages.length) {
       const startMessage = this.messages.find(message => message.timing.showOnStart);
       if (startMessage) {
-        const {duration} = startMessage.timing;
         this.eventManager.listen(this.player, 'firstplaying', () => {
           this.showMessage(startMessage);
         });
@@ -53,13 +48,15 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       this.eventManager.listen(this.player, 'timeupdate', () => {
         // if there is a message that should be shown, show it
         for (const message of midMessages) {
-          const {timeFromStart, timeFromEnd, duration} = message.timing;
+          const {timeFromStart, timeFromEnd} = message.timing;
 
           // TODO use updated player types
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const timeFromStartReached = timeFromStart && this.player.currentTime >= timeFromStart;
 
           // TODO use updated player types
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const timeFromEndReached = timeFromEnd && timeFromEnd >= this.player.duration - this.player.currentTime;
 

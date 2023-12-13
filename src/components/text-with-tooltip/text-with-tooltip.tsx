@@ -14,8 +14,10 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
   useLayoutEffect(() => {
     if (textRef?.current && comparisonTextRef?.current) {
       setIsFinalized(true);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const textHeight = textRef?.current?.getBoundingClientRect().height;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const comparisonTextHeight = comparisonTextRef?.current?.getBoundingClientRect().height;
       setShowTooltip(textHeight < comparisonTextHeight);

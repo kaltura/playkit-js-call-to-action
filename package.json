@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/call-to-action",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/playkit-call-to-action.js",
   "scripts": {
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@playkit-js/kaltura-player-js": "3.17.0",
+    "@playkit-js/ui-managers": "1.4.3-canary.0-b33eab0",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
@@ -76,6 +77,9 @@
     "@playkit-js/common": "1.5.2-canary.0-56dd9d9"
   },
   "kaltura": {
-    "name": "call-to-action"
+    "name": "call-to-action",
+    "dependencies": {
+      "playkit-ui-managers": "1.4.2"
+    }
   }
 }
