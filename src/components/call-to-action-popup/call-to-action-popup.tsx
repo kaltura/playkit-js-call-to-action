@@ -31,14 +31,14 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
           />
         </div>
 
-        <div className={styles.title}>
+        <div className={styles.title} data-testid="call-to-action-popup-title">
           <TextWithTooltip text={title || ''} numberOfLines={1} />
         </div>
-        <div className={styles.description}>
+        <div className={styles.description} data-testid="call-to-action-popup-description">
           <TextWithTooltip text={description || ''} numberOfLines={2} />
         </div>
 
-        <div className={styles.buttonsContainer}>
+        <div className={styles.buttonsContainer} data-testid="call-to-action-popup-buttons">
           <CallToActionButtons buttons={buttons} onClick={onClick} />
         </div>
       </div>

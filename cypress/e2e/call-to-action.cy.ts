@@ -19,7 +19,6 @@ const expectOverlayExists = (pluginConfig: object) => {
     getOverlayElement().should('exist');
   });
 };
-
 const expectPopupExists = (pluginConfig: object) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
@@ -27,7 +26,6 @@ const expectPopupExists = (pluginConfig: object) => {
     getPopupElement().should('exist');
   });
 };
-
 const expectPopupDoesntExist = (pluginConfig: object) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
@@ -208,10 +206,212 @@ describe('call to action plugin', () => {
     });
   });
 
-  // describe('message content', () => {
-  //   describe('popup');
-  //   describe('overlay');
-  // });
+  describe.only('message content', () => {
+    describe('popup', () => {
+      it('should show title', () => {
+        loadPlayerAndSetMedia({messages: [{showToast: true, title: 'cta popup title', timing: {showOnStart: true}}]}).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+        });
+      });
+      it('should show description', () => {
+        loadPlayerAndSetMedia({messages: [{showToast: true, description: 'cta popup description', timing: {showOnStart: true}}]}).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+        });
+      });
+      it('should show one button', () => {
+        loadPlayerAndSetMedia({
+          messages: [{showToast: true, buttons: [{label: 'cta button 1', link: 'http://www.google.com'}], timing: {showOnStart: true}}]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+        });
+      });
+      it('should show two buttons', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              showToast: true,
+              buttons: [
+                {label: 'cta button 1', link: 'http://www.google.com'},
+                {label: 'cta button 2', link: 'http://www.google.com'}
+              ],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+          getPopupElement().should('exist').contains('cta button 2').should('exist');
+        });
+      });
+      it('should show title and description', () => {
+        loadPlayerAndSetMedia({
+          messages: [{showToast: true, title: 'cta popup title', description: 'cta popup description', timing: {showOnStart: true}}]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+        });
+      });
+      it('should show title and one button', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              showToast: true,
+              title: 'cta popup title',
+              buttons: [{label: 'cta button 1', link: 'http://www.google.com'}],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+        });
+      });
+      it('should show title and two buttons', () => {
+        loadPlayerAndSetMedia({
+          title: 'cta popup title',
+          messages: [
+            {
+              showToast: true,
+              title: 'cta popup title',
+              buttons: [
+                {label: 'cta button 1', link: 'http://www.google.com'},
+                {label: 'cta button 2', link: 'http://www.google.com'}
+              ],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+          getPopupElement().should('exist').contains('cta button 2').should('exist');
+        });
+      });
+      it('should show description and one button', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              showToast: true,
+              description: 'cta popup description',
+              buttons: [{label: 'cta button 1', link: 'http://www.google.com'}],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+        });
+      });
+      it('should show description and two buttons', () => {
+        loadPlayerAndSetMedia({
+          description: 'cta popup description',
+          messages: [
+            {
+              showToast: true,
+              description: 'cta popup description',
+              buttons: [
+                {label: 'cta button 1', link: 'http://www.google.com'},
+                {label: 'cta button 2', link: 'http://www.google.com'}
+              ],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+          getPopupElement().should('exist').contains('cta button 2').should('exist');
+        });
+      });
+      it('should show title, description and one button', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              showToast: true,
+              title: 'cta popup title',
+              description: 'cta popup description',
+              buttons: [{label: 'cta button 1', link: 'http://www.google.com'}],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+        });
+      });
+      it('should show title, description and two buttons', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              title: 'cta popup title',
+              description: 'cta popup description',
+              showToast: true,
+              buttons: [
+                {label: 'cta button 1', link: 'http://www.google.com'},
+                {label: 'cta button 2', link: 'http://www.google.com'}
+              ],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getPopupElement().should('exist').contains('cta popup title').should('exist');
+          getPopupElement().should('exist').contains('cta popup description').should('exist');
+          getPopupElement().should('exist').contains('cta button 1').should('exist');
+          getPopupElement().should('exist').contains('cta button 2').should('exist');
+        });
+      });
+    });
+    // describe('overlay', () => {
+    //it('should show title', () => {});
+    // it('should show description', () => {
+
+    // });
+    // it('should show one button', () => {
+
+    // });
+    // it('should show title and description', () => {
+
+    // });
+    // it('should show title and one button', () => {
+
+    // });
+    // it('should show title and two buttons', () => {
+
+    // });
+    // it('should show description and one button', () => {
+
+    // });
+    // it('should show description and two buttons', () => {
+
+    // });
+    // it('should show title, description and one button', () => {
+
+    // });
+    // it('should show title, description and two buttons', () => {
+
+    // });
+    // });
+  });
   //describe('message timing', () => {
   // describe('show on start', () => {
   //   it('should appear on playback start', () => {
