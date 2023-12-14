@@ -53,12 +53,12 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
           // TODO use updated player types
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          const timeFromStartReached = timeFromStart && this.player.currentTime >= timeFromStart;
+          const timeFromStartReached = timeFromStart > -1 && this.player.currentTime >= timeFromStart;
 
           // TODO use updated player types
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          const timeFromEndReached = timeFromEnd && timeFromEnd >= this.player.duration - this.player.currentTime;
+          const timeFromEndReached = timeFromEnd > -1 && timeFromEnd >= this.player.duration - this.player.currentTime;
 
           if (!message.wasShown && (timeFromStartReached || timeFromEndReached)) {
             message.wasShown = true;
@@ -97,7 +97,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
             message.timing.showOnEnd === true ||
             message.timing.timeFromStart >= 0 ||
             message.timing.timeFromEnd >= 0);
-        const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
+        const durationValid = message.timing && (message.timing.duration === undefined || message.timing.duration > 0);
         const contentValid = message.description || message.title || message.buttons.length;
 
         return durationValid && timingValid && contentValid;

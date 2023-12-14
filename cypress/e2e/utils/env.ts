@@ -13,17 +13,14 @@ export const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = 
             serviceUrl: 'http://mock-api'
           }
         },
-        sources: {
-          metadata: {
-            name: 'download'
-          }
-        },
         plugins: {
-          callToAction: pluginConf,
           uiManagers: {}
         },
-        playback: {muted: true, autoplay: true, ...playbackConf}
+        playback: {muted: true, ...playbackConf}
       });
+
+      kalturaPlayer.configure({plugins: {callToAction: pluginConf}});
+
       return Promise.resolve(kalturaPlayer);
     } catch (e: any) {
       return Promise.reject(e.message);
@@ -64,6 +61,3 @@ export const loadPlayerAndSetMedia = (
     });
   });
 };
-
-export const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
-export const getPopupElement = () => cy.get('[data-testid="call-to-action-popup"]');
