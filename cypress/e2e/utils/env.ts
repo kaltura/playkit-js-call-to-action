@@ -61,3 +61,13 @@ export const loadPlayerAndSetMedia = (
     });
   });
 };
+
+export const getPlayButtonElement = () => cy.get('.playkit-pre-playback-play-button');
+export const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
+export const getPopupElement = () => cy.get('[data-testid="call-to-action-popup"]');
+
+export const expectElementContains = (getElement: () => any, texts: string[]) => {
+  for (const text of texts) {
+    getElement().contains(text).should('exist');
+  }
+};
