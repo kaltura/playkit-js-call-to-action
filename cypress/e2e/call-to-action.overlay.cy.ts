@@ -8,6 +8,7 @@ const BUTTON_2_LABEL = 'cta button 2';
 const BUTTON_2_LINK = 'test';
 
 const expectOverlayContains = (texts: string[]) => expectElementContains(getOverlayElement, texts);
+const getCloseButton = () => cy.get('[data-testid="call-to-action-overlay-close-button"] button');
 
 describe('call to action popup', () => {
   it('should show title', () => {
@@ -163,8 +164,28 @@ describe('call to action popup', () => {
       expectOverlayContains([TITLE, DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]);
     });
   });
+
+  describe.only('buttons', () => {
+    describe('close button', () => {
+      it('should close popup on click', () => {
+        loadPlayerAndSetMedia({
+          messages: [
+            {
+              buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
+              timing: {showOnStart: true}
+            }
+          ]
+        }).then(() => {
+          getPlayButtonElement().should('exist').click({force: true});
+          getPlayButtonElement().should('not.exist');
+          getOverlayElement().should('exist');
+          getCloseButton().click({force: true});
+          getOverlayElement().should('not.exist');
+        });
+      });
+    });
+  });
 });
 
-// TODO close button click
 // TODO button 1 click
 // TODO button 2 click

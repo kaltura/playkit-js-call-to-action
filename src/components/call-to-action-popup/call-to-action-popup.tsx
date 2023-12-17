@@ -20,7 +20,7 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
   ({title, description, buttons, onClick, onClose, closeLabel}: CallToActionPopupProps) => {
     return (
       <div className={styles.callToActionPopup} data-testid="call-to-action-popup">
-        <div className={styles.closeButton}>
+        <div className={styles.closeButton} data-testid="call-to-action-popup-close-button">
           <Button
             onClick={onClose}
             type={ButtonType.borderlessTranslucent}
@@ -31,14 +31,14 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
           />
         </div>
 
-        <div className={styles.title} data-testid="call-to-action-popup-title">
+        <div className={styles.title}>
           <TextWithTooltip text={title || ''} numberOfLines={1} />
         </div>
-        <div className={styles.description} data-testid="call-to-action-popup-description">
+        <div className={styles.description}>
           <TextWithTooltip text={description || ''} numberOfLines={2} />
         </div>
 
-        <div className={styles.buttonsContainer} data-testid="call-to-action-popup-buttons">
+        <div className={styles.buttonsContainer}>
           <CallToActionButtons buttons={buttons} onClick={onClick} />
         </div>
       </div>
