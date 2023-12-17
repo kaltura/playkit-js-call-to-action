@@ -3,7 +3,7 @@ const {PLAYER_SIZE} = ui.Components;
 
 import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
-import {MessageData} from './types';
+import {MessageButtonData, MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
 
 const DESCRIPTION_LINES_SMALL = 2;
@@ -24,12 +24,32 @@ class CallToActionManager {
     this.floatingManager = floatingManager;
   }
 
-  private showPopup({title, description, buttons}: MessageData) {
+  private showPopup({
+    title,
+    description,
+    buttons,
+    onClose
+  }: {
+    title?: string;
+    description?: string;
+    buttons?: MessageButtonData[];
+    onClose?: () => void;
+  }) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
       mode: 'Immediate',
       position: 'InteractiveArea',
-      renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
+      renderContent: () => (
+        <CallToActionPopup
+          title={title}
+          description={description}
+          buttons={buttons}
+          onClose={() => {
+            this.hidePopup();
+            onClose && onClose();
+          }}
+        />
+      )
     });
   }
 
@@ -38,7 +58,7 @@ class CallToActionManager {
     this.popupInstance = null;
   }
 
-  private showOverlay(message: MessageData, descriptionLines: number) {
+  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void) {
     if (!this.player.paused) {
       this.player.pause();
       this.playOnClose = true;
@@ -56,7 +76,10 @@ class CallToActionManager {
             description={description}
             buttons={buttons}
             onClick={(link: string) => this.onCallToActionButtonClick(link)}
-            onClose={() => this.onOverlayCloseClick()}
+            onClose={() => {
+              this.onOverlayCloseClick();
+              onClose && onClose();
+            }}
             descriptionLines={descriptionLines}
           />
         )
@@ -95,32 +118,39 @@ class CallToActionManager {
     }
   }
 
-  public addMessage(message: MessageData) {
+  private hideMessageAfterDuration(duration?: number) {
+    if (duration) {
+      this.hideMessageTimeout = window.setTimeout(() => {
+        this.removeMessage();
+        this.hideMessageTimeout = -1;
+      }, duration * 1000);
+    }
+  }
+
+  public addMessage({message, duration, onClose}: {message: MessageData; duration?: number; onClose: () => void}) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {
         return;
       }
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
-        this.showOverlay(message, DESCRIPTION_LINES_SMALL);
+        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose);
+        this.hideMessageAfterDuration(duration);
         break;
       }
       case PLAYER_SIZE.MEDIUM:
       case PLAYER_SIZE.LARGE:
       case PLAYER_SIZE.EXTRA_LARGE: {
         if (message.showToast) {
-          this.showPopup(message);
+          this.showPopup({...message, onClose});
+          if (message.timing.showOnEnd) {
+            this.hideMessageAfterDuration(duration);
+          }
         } else {
-          this.showOverlay(message, DESCRIPTION_LINES_LARGE);
+          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose);
+          this.hideMessageAfterDuration(duration);
         }
       }
-    }
-
-    if (message.timing.duration) {
-      this.hideMessageTimeout = window.setTimeout(() => {
-        this.removeMessage();
-        this.hideMessageTimeout = -1;
-      }, message.timing.duration * 1000);
     }
   }
 

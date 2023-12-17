@@ -3,8 +3,9 @@ import {FloatingManager} from '@playkit-js/ui-managers';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 
-interface MessageVisibilityData {
+interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
+  wasDismissed?: boolean;
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
@@ -12,9 +13,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     messages: []
   };
   private callToActionManager: CallToActionManager;
-  private messages: (MessageData & MessageVisibilityData)[] = [];
+  private messages: MessageDataWithTracking[] = [];
 
   private messagesFiltered = false;
+  private activeMessage: MessageData | null = null;
+  private activeMessageEndTime = -1;
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
@@ -36,67 +39,193 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     }
 
     if (this.messages.length) {
-      const startMessage = this.config.messages.find(message => message.timing.showOnStart);
-      if (startMessage) {
-        this.eventManager.listen(this.player, 'firstplaying', () => {
-          this.showMessage(startMessage);
-        });
+      this.eventManager.listen(this.player, this.player.Event.Core.TIME_UPDATE, () => this.onTimeUpdate());
+      this.eventManager.listen(this.player, this.player.Event.Core.SEEKED, () => this.onSeeked());
+    }
+  }
+
+  private onTimeUpdate() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+
+    this.hideActiveMessage();
+
+    for (let i = this.messages.length - 1; i >= 0; --i) {
+      const message = this.messages[i];
+
+      if (this.activeMessage && this.compareMessagesByTiming(message, this.activeMessage) < 0) {
+        break;
       }
 
-      const midMessages = this.messages.filter(message => message.timing.timeFromEnd > -1 || message.timing.timeFromStart > -1);
-
-      this.eventManager.listen(this.player, 'timeupdate', () => {
-        // if there is a message that should be shown, show it
-        for (const message of midMessages) {
-          const {timeFromStart, timeFromEnd} = message.timing;
-
-          // TODO use updated player types
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const timeFromStartReached = timeFromStart && this.player.currentTime >= timeFromStart;
-
-          // TODO use updated player types
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const timeFromEndReached = timeFromEnd && timeFromEnd >= this.player.duration - this.player.currentTime;
-
-          if (!message.wasShown && (timeFromStartReached || timeFromEndReached)) {
-            message.wasShown = true;
-            this.showMessage(message);
-            break;
-          }
+      if (!message.wasShown && this.isMessageInTimeRange(message)) {
+        const remainingDuration = this.getRemainingDuration(message);
+        if (remainingDuration) {
+          this.activeMessageEndTime = currentTime + remainingDuration;
         }
-      });
-
-      const endMessage = this.config.messages.find(message => message.timing.showOnEnd);
-      if (endMessage) {
-        this.eventManager.listen(this.player, 'ended', () => {
-          this.showMessage(endMessage);
-        });
+        this.showMessage(message, remainingDuration);
+        break;
       }
     }
   }
 
-  filterMessages() {
-    this.messages = this.config.messages.filter(message => {
-      const timingValid =
-        message.timing &&
-        (message.timing.showOnEnd || message.timing.showOnStart || message.timing.timeFromEnd !== -1 || message.timing.timeFromStart !== -1);
-      const durationValid = !message.timing.duration || message.timing.duration > 0;
-      const contentValid = message.description || message.title || message.buttons.length;
+  private onSeeked() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
 
-      return durationValid && timingValid && contentValid;
+    this.hideActiveMessage();
+
+    for (const message of this.messages) {
+      if (message.timing.redisplayMessage || !message.wasDismissed) {
+        message.wasShown = false;
+      }
+    }
+
+    for (let i = this.messages.length - 1; i >= 0; --i) {
+      const message = this.messages[i];
+
+      if (message.wasShown || !this.isMessageInTimeRange(message)) {
+        continue;
+      }
+
+      const remainingDuration = this.getRemainingDuration(message);
+      if (remainingDuration) {
+        this.activeMessageEndTime = currentTime + remainingDuration;
+      }
+
+      this.showMessage(message, remainingDuration);
+      break;
+    }
+  }
+
+  private hideActiveMessage() {
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+
+    if (
+      this.activeMessage &&
+      ((this.activeMessageEndTime !== -1 && this.activeMessageEndTime <= currentTime) ||
+        this.compareMessagesByTiming({timing: {timeFromStart: currentTime}}, this.activeMessage) < 0)
+    ) {
+      this.callToActionManager.removeMessage();
+      this.activeMessageEndTime = -1;
+    }
+  }
+
+  private filterMessages() {
+    this.messages = this.config.messages
+      .map(message => {
+        const {buttons} = message;
+        return {
+          ...message,
+          buttons: buttons
+            ? buttons.filter(button => {
+                return button.label && typeof button.label === 'string' && button.link && typeof button.link === 'string';
+              })
+            : []
+        };
+      })
+      .filter(message => {
+        const timingValid =
+          message.timing &&
+          (message.timing.showOnStart === true ||
+            message.timing.showOnEnd === true ||
+            (message.timing.timeFromStart !== undefined && message.timing.timeFromStart >= 0) ||
+            (message.timing.timeFromEnd !== undefined && message.timing.timeFromEnd >= 0));
+        const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
+        const contentValid = message.description || message.title || message.buttons.length;
+
+        return durationValid && timingValid && contentValid;
+      })
+      .sort((messageA: MessageData, messageB: MessageData) => this.compareMessagesByTiming(messageA, messageB));
+  }
+
+  private compareMessagesByTiming(messageA: MessageData, messageB: MessageData) {
+    if (messageA.timing.showOnEnd || messageB.timing.showOnStart) {
+      return 1;
+    }
+    if (messageA.timing.showOnStart || messageB.timing.showOnEnd) {
+      return -1;
+    }
+
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const videoDuration = this.player.duration;
+    const messageAStartTime = messageA.timing.timeFromEnd ? videoDuration - messageA.timing.timeFromEnd : messageA.timing.timeFromStart;
+    const messageBStartTime = messageB.timing.timeFromEnd ? videoDuration - messageB.timing.timeFromEnd : messageB.timing.timeFromStart;
+
+    return messageAStartTime! - messageBStartTime!;
+  }
+
+  private showMessage(message: MessageDataWithTracking, duration?: number) {
+    this.activeMessage = message;
+    message.wasShown = true;
+    this.callToActionManager.addMessage({
+      message,
+      duration,
+      onClose: () => {
+        message.wasDismissed = true;
+      }
     });
   }
 
-  showMessage(message: MessageData) {
-    this.callToActionManager.addMessage(message);
+  private getRemainingDuration(message: MessageData) {
+    if (!message.timing.duration) return 0;
+
+    const {showOnStart, timeFromStart, showOnEnd, timeFromEnd, duration} = message.timing;
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const videoDuration = this.player.duration;
+
+    if (showOnStart) {
+      return duration - currentTime;
+    }
+    if (timeFromStart) {
+      return timeFromStart + duration - currentTime;
+    }
+    if (timeFromEnd) {
+      return videoDuration - timeFromEnd + duration - currentTime;
+    }
+    if (showOnEnd) {
+      return currentTime < duration ? 0 : duration;
+    }
   }
 
-  reset() {
+  private isMessageInTimeRange(message: MessageData) {
+    const {showOnStart, timeFromStart, showOnEnd, timeFromEnd, duration} = message.timing;
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentTime = this.player.currentTime;
+    // TODO use updated player types
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const videoDuration = this.player.duration;
+
+    if (showOnStart) return !duration || currentTime <= duration;
+    if (showOnEnd) return currentTime === videoDuration;
+    if (timeFromStart) return currentTime >= timeFromStart && (!duration || currentTime <= timeFromStart + duration);
+    if (timeFromEnd) return currentTime >= videoDuration - timeFromEnd && (!duration || currentTime <= videoDuration - timeFromEnd + duration);
+  }
+
+  public reset() {
+    this.activeMessage = null;
+    this.activeMessageEndTime = -1;
     this.callToActionManager.removeMessage();
     for (const message of this.messages) {
       message.wasShown = false;
+      message.wasDismissed = false;
     }
   }
 }
