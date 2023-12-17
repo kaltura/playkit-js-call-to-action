@@ -29,7 +29,15 @@ class CallToActionManager {
       label: 'Call To Action Popup',
       mode: 'Immediate',
       position: 'InteractiveArea',
-      renderContent: () => <CallToActionPopup title={title} description={description} buttons={buttons} onClose={() => this.hidePopup()} />
+      renderContent: () => (
+        <CallToActionPopup
+          title={title}
+          description={description}
+          buttons={buttons}
+          onClick={(link: string) => this.onCallToActionButtonClick(link)}
+          onClose={() => this.hidePopup()}
+        />
+      )
     });
   }
 
