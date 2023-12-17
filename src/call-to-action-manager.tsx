@@ -44,6 +44,7 @@ class CallToActionManager {
           title={title}
           description={description}
           buttons={buttons}
+          onClick={(link: string) => this.onCallToActionButtonClick(link)}
           onClose={() => {
             this.hidePopup();
             onClose && onClose();
