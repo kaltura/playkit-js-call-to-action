@@ -1,191 +1,280 @@
-import {expectElementContains, getOverlayElement, getPlayButtonElement, loadPlayerAndSetMedia} from './utils/env';
+import {expectCloseButton, expectContains, expectLoadMedia, expectWindowOpen, getOverlayElement} from './utils/env';
 
 const TITLE = 'cta title';
 const DESCRIPTION = 'cta description';
 const BUTTON_1_LABEL = 'cta button 1';
-const BUTTON_1_LINK = 'http://www.google.com';
 const BUTTON_2_LABEL = 'cta button 2';
-const BUTTON_2_LINK = 'test';
+const BUTTON_LINK_URL = 'http://www.google.com';
+const BUTTON_LINK_ENTRY = 'test';
 
-const expectOverlayContains = (texts: string[]) => expectElementContains(getOverlayElement, texts);
 const getCloseButton = () => cy.get('[data-testid="call-to-action-overlay-close-button"] button');
 
-describe('call to action popup', () => {
+const expectContainsInOverlay = (pluginConfig: any, texts: string[]) => {
+  expectContains(pluginConfig, texts, getOverlayElement);
+};
+const expectCloseButtonInOverlay = (pluginConfig: any) => {
+  expectCloseButton(pluginConfig, getOverlayElement, getCloseButton);
+};
+const expectWindowOpenInOverlay = (pluginConfig: any, buttonLabel: string, buttonLink: string) => {
+  expectWindowOpen(pluginConfig, buttonLabel, buttonLink, getOverlayElement);
+};
+const expectLoadMediaInOverlay = (pluginConfig: any, buttonLabel: string, buttonLink: string) => {
+  expectLoadMedia(pluginConfig, buttonLabel, buttonLink, getOverlayElement);
+};
+
+describe('call to action overlay', () => {
   it('should show title', () => {
-    loadPlayerAndSetMedia({messages: [{title: TITLE, timing: {showOnStart: true}}]}).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE]);
-    });
+    expectContainsInOverlay({messages: [{title: TITLE, timing: {showOnStart: true}}]}, [TITLE]);
   });
   it('should show description', () => {
-    loadPlayerAndSetMedia({messages: [{description: DESCRIPTION, timing: {showOnStart: true}}]}).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([DESCRIPTION]);
-    });
+    expectContainsInOverlay({messages: [{description: DESCRIPTION, timing: {showOnStart: true}}]}, [DESCRIPTION]);
   });
   it('should show one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [{buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}], timing: {showOnStart: true}}]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([BUTTON_1_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [{buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}], timing: {showOnStart: true}}]
+      },
+      [BUTTON_1_LABEL]
+    );
   });
   it('should show two buttons', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [
+          {
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show title and description', () => {
-    loadPlayerAndSetMedia({
-      messages: [{title: TITLE, description: DESCRIPTION, timing: {showOnStart: true}}]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE, DESCRIPTION]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [{title: TITLE, description: DESCRIPTION, timing: {showOnStart: true}}]
+      },
+      [TITLE, DESCRIPTION]
+    );
   });
   it('should show title and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          title: TITLE,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE, BUTTON_1_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [
+          {
+            title: TITLE,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, BUTTON_1_LABEL]
+    );
   });
   it('should show title and two buttons', () => {
-    loadPlayerAndSetMedia({
-      title: 'cta title',
-      messages: [
-        {
-          title: 'cta title',
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        title: 'cta title',
+        messages: [
+          {
+            title: 'cta title',
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show description and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          description: DESCRIPTION,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([DESCRIPTION, BUTTON_1_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [
+          {
+            description: DESCRIPTION,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [DESCRIPTION, BUTTON_1_LABEL]
+    );
   });
   it('should show description and two buttons', () => {
-    loadPlayerAndSetMedia({
-      description: 'cta description',
-      messages: [
-        {
-          description: DESCRIPTION,
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        description: 'cta description',
+        messages: [
+          {
+            description: DESCRIPTION,
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show title, description and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          title: TITLE,
-          description: DESCRIPTION,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE, DESCRIPTION, BUTTON_1_LABEL]);
-    });
+    expectContainsInOverlay(
+      {
+        messages: [
+          {
+            title: TITLE,
+            description: DESCRIPTION,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, DESCRIPTION, BUTTON_1_LABEL]
+    );
   });
   it('should show title, description and two buttons', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          title: TITLE,
-          description: DESCRIPTION,
+    expectContainsInOverlay(
+      {
+        messages: [
+          {
+            title: TITLE,
+            description: DESCRIPTION,
 
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectOverlayContains([TITLE, DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
-
-  describe.only('buttons', () => {
+  describe('buttons', () => {
     describe('close button', () => {
       it('should close popup on click', () => {
-        loadPlayerAndSetMedia({
+        expectCloseButtonInOverlay({
           messages: [
             {
-              buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
+              buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
               timing: {showOnStart: true}
             }
           ]
-        }).then(() => {
-          getPlayButtonElement().should('exist').click({force: true});
-          getPlayButtonElement().should('not.exist');
-          getOverlayElement().should('exist');
-          getCloseButton().click({force: true});
-          getOverlayElement().should('not.exist');
+        });
+      });
+    });
+    describe('one button', () => {
+      it('should open new window if link is a url', () => {
+        expectWindowOpenInOverlay(
+          {
+            messages: [
+              {
+                buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}, {}],
+                timing: {showOnStart: true}
+              }
+            ]
+          },
+          BUTTON_1_LABEL,
+          BUTTON_LINK_URL
+        );
+      });
+      it('should call loadMedia if link is not a url', () => {
+        expectLoadMediaInOverlay(
+          {
+            messages: [
+              {
+                buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY}],
+                timing: {showOnStart: true}
+              }
+            ]
+          },
+          BUTTON_1_LABEL,
+          BUTTON_LINK_ENTRY
+        );
+      });
+    });
+    describe('two buttons', () => {
+      describe('click on button 1', () => {
+        it('should open new window if link is a url', () => {
+          expectWindowOpenInOverlay(
+            {
+              messages: [
+                {
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_1_LABEL,
+            BUTTON_LINK_URL
+          );
+        });
+        it('should call loadMedia if link is not a url', () => {
+          expectLoadMediaInOverlay(
+            {
+              messages: [
+                {
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_URL}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_1_LABEL,
+            BUTTON_LINK_ENTRY
+          );
+        });
+      });
+      describe('click on button 2', () => {
+        it('should open new window if link is a url', () => {
+          expectWindowOpenInOverlay(
+            {
+              messages: [
+                {
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_URL}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_2_LABEL,
+            BUTTON_LINK_URL
+          );
+        });
+        it('should call loadMedia if link is not a url', () => {
+          expectLoadMediaInOverlay(
+            {
+              messages: [
+                {
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_2_LABEL,
+            BUTTON_LINK_ENTRY
+          );
         });
       });
     });
   });
 });
-
-// TODO button 1 click
-// TODO button 2 click

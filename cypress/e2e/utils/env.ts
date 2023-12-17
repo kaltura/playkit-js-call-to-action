@@ -66,8 +66,45 @@ export const getPlayButtonElement = () => cy.get('.playkit-pre-playback-play-but
 export const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
 export const getPopupElement = () => cy.get('[data-testid="call-to-action-popup"]');
 
-export const expectElementContains = (getElement: () => any, texts: string[]) => {
-  for (const text of texts) {
-    getElement().contains(text).should('exist');
-  }
+export const expectContains = (pluginConfig: any, texts: string[], getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement().should('not.exist');
+    for (const text of texts) {
+      getElement().contains(text).should('exist');
+    }
+  });
+};
+
+export const expectCloseButton = (pluginConfig: any, getElement: () => any, getCloseButton: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement().should('not.exist');
+    getElement().should('exist');
+    getCloseButton().click({force: true});
+    getElement().should('not.exist');
+  });
+};
+
+export const expectWindowOpen = (pluginConfig: any, buttonLabel: string, buttonLink: string, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    cy.window().then(win => {
+      cy.stub(win, 'open').as('Open');
+    });
+
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement().should('not.exist');
+    getElement().contains(buttonLabel).click({force: true});
+    cy.get('@Open').should('have.been.calledOnceWith', buttonLink, '_blank');
+  });
+};
+
+export const expectLoadMedia = (pluginConfig: any, buttonLabel: string, buttonLink: string, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    cy.stub(kalturaPlayer, 'loadMedia').as('LoadMedia');
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement().should('not.exist');
+    getElement().contains(buttonLabel).click({force: true});
+    cy.get('@LoadMedia').should('have.been.calledOnceWith', {entryId: buttonLink});
+  });
 };

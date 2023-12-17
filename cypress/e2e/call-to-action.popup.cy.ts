@@ -1,247 +1,290 @@
-import {expectElementContains, getPlayButtonElement, getPopupElement, loadPlayerAndSetMedia} from './utils/env';
+import {expectCloseButton, expectContains, expectLoadMedia, expectWindowOpen, getPopupElement} from './utils/env';
 
 const TITLE = 'cta title';
 const DESCRIPTION = 'cta description';
 const BUTTON_1_LABEL = 'cta button 1';
-const BUTTON_1_LINK = 'http://www.google.com';
 const BUTTON_2_LABEL = 'cta button 2';
-const BUTTON_2_LINK = 'test';
+const BUTTON_LINK_URL = 'http://www.google.com';
+const BUTTON_LINK_ENTRY = 'test';
 
-const expectPopupContains = (texts: string[]) => expectElementContains(getPopupElement, texts);
 const getCloseButton = () => cy.get('[data-testid="call-to-action-popup-close-button"] button');
+
+const expectContainsInPopup = (pluginConfig: any, texts: string[]) => expectContains(pluginConfig, texts, getPopupElement);
+const expectCloseButtonInPopup = (pluginConfig: any) => {
+  expectCloseButton(pluginConfig, getPopupElement, getCloseButton);
+};
+const expectWindowOpenInPopup = (pluginConfig: any, buttonLabel: string, buttonLink: string) => {
+  expectWindowOpen(pluginConfig, buttonLabel, buttonLink, getPopupElement);
+};
+const expectLoadMediaInPopup = (pluginConfig: any, buttonLabel: string, buttonLink: string) =>
+  expectLoadMedia(pluginConfig, buttonLabel, buttonLink, getPopupElement);
 
 describe('call to action popup', () => {
   it('should show title', () => {
-    loadPlayerAndSetMedia({messages: [{showToast: true, title: TITLE, timing: {showOnStart: true}}]}).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE]);
-    });
+    expectContainsInPopup({messages: [{showToast: true, title: TITLE, timing: {showOnStart: true}}]}, [TITLE]);
   });
   it('should show description', () => {
-    loadPlayerAndSetMedia({messages: [{showToast: true, description: DESCRIPTION, timing: {showOnStart: true}}]}).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([DESCRIPTION]);
-    });
+    expectContainsInPopup({messages: [{showToast: true, description: DESCRIPTION, timing: {showOnStart: true}}]}, [DESCRIPTION]);
   });
   it('should show one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [{showToast: true, buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}], timing: {showOnStart: true}}]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([BUTTON_1_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [{showToast: true, buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}], timing: {showOnStart: true}}]
+      },
+      [BUTTON_1_LABEL]
+    );
   });
   it('should show two buttons', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          showToast: true,
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [
+          {
+            showToast: true,
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show title and description', () => {
-    loadPlayerAndSetMedia({
-      messages: [{showToast: true, title: TITLE, description: DESCRIPTION, timing: {showOnStart: true}}]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE, DESCRIPTION]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [{showToast: true, title: TITLE, description: DESCRIPTION, timing: {showOnStart: true}}]
+      },
+      [TITLE, DESCRIPTION]
+    );
   });
   it('should show title and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          showToast: true,
-          title: TITLE,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE, BUTTON_1_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [
+          {
+            showToast: true,
+            title: TITLE,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, BUTTON_1_LABEL]
+    );
   });
   it('should show title and two buttons', () => {
-    loadPlayerAndSetMedia({
-      title: 'cta title',
-      messages: [
-        {
-          showToast: true,
-          title: 'cta title',
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        title: 'cta title',
+        messages: [
+          {
+            showToast: true,
+            title: 'cta title',
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show description and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          showToast: true,
-          description: DESCRIPTION,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([DESCRIPTION, BUTTON_1_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [
+          {
+            showToast: true,
+            description: DESCRIPTION,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [DESCRIPTION, BUTTON_1_LABEL]
+    );
   });
   it('should show description and two buttons', () => {
-    loadPlayerAndSetMedia({
-      description: 'cta description',
-      messages: [
-        {
-          showToast: true,
-          description: DESCRIPTION,
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        description: 'cta description',
+        messages: [
+          {
+            showToast: true,
+            description: DESCRIPTION,
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
   it('should show title, description and one button', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          showToast: true,
-          title: TITLE,
-          description: DESCRIPTION,
-          buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE, DESCRIPTION, BUTTON_1_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [
+          {
+            showToast: true,
+            title: TITLE,
+            description: DESCRIPTION,
+            buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, DESCRIPTION, BUTTON_1_LABEL]
+    );
   });
   it('should show title, description and two buttons', () => {
-    loadPlayerAndSetMedia({
-      messages: [
-        {
-          title: TITLE,
-          description: DESCRIPTION,
-          showToast: true,
-          buttons: [
-            {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-            {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-          ],
-          timing: {showOnStart: true}
-        }
-      ]
-    }).then(() => {
-      getPlayButtonElement().should('exist').click({force: true});
-      getPlayButtonElement().should('not.exist');
-      expectPopupContains([TITLE, DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]);
-    });
+    expectContainsInPopup(
+      {
+        messages: [
+          {
+            title: TITLE,
+            description: DESCRIPTION,
+            showToast: true,
+            buttons: [
+              {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+              {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+            ],
+            timing: {showOnStart: true}
+          }
+        ]
+      },
+      [TITLE, DESCRIPTION, BUTTON_1_LABEL, BUTTON_2_LABEL]
+    );
   });
-
-  describe.only('buttons', () => {
+  describe('buttons', () => {
     describe('close button', () => {
       it('should close popup on click', () => {
-        loadPlayerAndSetMedia({
+        expectCloseButtonInPopup({
           messages: [
             {
               showToast: true,
-              buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}],
+              buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}],
               timing: {showOnStart: true}
             }
           ]
-        }).then(() => {
-          getPlayButtonElement().should('exist').click({force: true});
-          getPlayButtonElement().should('not.exist');
-          getPopupElement().should('exist');
-          getCloseButton().click({force: true});
-          getPopupElement().should('not.exist');
         });
       });
     });
-    // describe('one button', () => {
-    //   it('should open new window if link is a url', () => {
-    //     loadPlayerAndSetMedia({
-    //       messages: [
-    //         {
-    //           showToast: true,
-    //           buttons: [{label: BUTTON_1_LABEL, link: BUTTON_1_LINK}, {}],
-    //           timing: {showOnStart: true}
-    //         }
-    //       ]
-    //     }).then(() => {
-    //       cy.window().then(win => {
-    //         cy.stub(win, 'open').as('Open');
-    //       });
-
-    //       getPlayButtonElement().should('exist').click({force: true});
-    //       getPlayButtonElement().should('not.exist');
-    //       getPopupElement().contains(BUTTON_1_LABEL).click({force: true});
-    //       cy.get('@Open').should('have.been.calledOnceWith', [BUTTON_1_LINK, '"_blank"']);
-    //     });
-    //   });
-    //   it('should call loadMedia if link is not a url', () => {
-    //     loadPlayerAndSetMedia({
-    //       messages: [
-    //         {
-    //           showToast: true,
-    //           buttons: [
-    //             {label: BUTTON_1_LABEL, link: BUTTON_1_LINK},
-    //             {label: BUTTON_2_LABEL, link: BUTTON_2_LINK}
-    //           ],
-    //           timing: {showOnStart: true}
-    //         }
-    //       ]
-    //     }).then(() => {
-    //       cy.window().then(win => {
-    //         cy.stub(win.KalturaPlayer, 'loadMedia').as('LoadMedia');
-    //       });
-
-    //       getPlayButtonElement().should('exist').click({force: true});
-    //       getPlayButtonElement().should('not.exist');
-    //       getPopupElement().contains(BUTTON_2_LABEL).click({force: true});
-    //       cy.get('@LoadMedia').should('have.been.calledOnceWith', [BUTTON_2_LINK]);
-    //     });
-    //   });
-    // });
-    // describe('two buttons', () => {
-    //   describe('click on button 1');
-    //   describe('click on button 2');
-    // });
+    describe('one button', () => {
+      it('should open new window if link is a url', () => {
+        expectWindowOpenInPopup(
+          {
+            messages: [
+              {
+                showToast: true,
+                buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_URL}, {}],
+                timing: {showOnStart: true}
+              }
+            ]
+          },
+          BUTTON_1_LABEL,
+          BUTTON_LINK_URL
+        );
+      });
+      it('should call loadMedia if link is not a url', () => {
+        expectLoadMediaInPopup(
+          {
+            messages: [
+              {
+                showToast: true,
+                buttons: [{label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY}],
+                timing: {showOnStart: true}
+              }
+            ]
+          },
+          BUTTON_1_LABEL,
+          BUTTON_LINK_ENTRY
+        );
+      });
+    });
+    describe('two buttons', () => {
+      describe('click on button 1', () => {
+        it('should open new window if link is a url', () => {
+          expectWindowOpenInPopup(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_1_LABEL,
+            BUTTON_LINK_URL
+          );
+        });
+        it('should call loadMedia if link is not a url', () => {
+          expectLoadMediaInPopup(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_URL}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_1_LABEL,
+            BUTTON_LINK_ENTRY
+          );
+        });
+      });
+      describe('click on button 2', () => {
+        it('should open new window if link is a url', () => {
+          expectWindowOpenInPopup(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_ENTRY},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_URL}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_2_LABEL,
+            BUTTON_LINK_URL
+          );
+        });
+        it('should call loadMedia if link is not a url', () => {
+          expectLoadMediaInPopup(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  buttons: [
+                    {label: BUTTON_1_LABEL, link: BUTTON_LINK_URL},
+                    {label: BUTTON_2_LABEL, link: BUTTON_LINK_ENTRY}
+                  ],
+                  timing: {showOnStart: true}
+                }
+              ]
+            },
+            BUTTON_2_LABEL,
+            BUTTON_LINK_ENTRY
+          );
+        });
+      });
+    });
   });
 });
-
-// TODO 1 button click
-// TODO 2 buttons click
