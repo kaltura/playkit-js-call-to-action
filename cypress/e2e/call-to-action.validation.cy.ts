@@ -3,16 +3,18 @@ import {getOverlayElement, getPlayButtonElement, getPopupElement, loadPlayerAndS
 const expectElementExists = (pluginConfig: object, getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
-    getPlayButtonElement().should('not.exist');
-    getElement().should('exist');
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'));
   });
 };
 
 const expectElementDoesntExist = (pluginConfig: object, getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
-    getPlayButtonElement().should('not.exist');
-    getElement().should('not.exist');
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('not.exist'));
   });
 };
 

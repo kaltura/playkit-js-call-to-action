@@ -5,41 +5,53 @@ const TITLE = 'title';
 const expectElementExistsAt = (pluginConfig: object, time: number, getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
     getPlayButtonElement().should('exist').click({force: true});
-    getPlayButtonElement().should('not.exist');
-    getElement()
-      .should('exist')
-      .then(() => {
-        expect(kalturaPlayer.currentTime).to.be.at.least(time);
-      });
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => expect(kalturaPlayer.currentTime).to.be.at.least(time));
   });
 };
 
-const expectElementDoesntExistAt = (pluginConfig: object, time: number, getElement: () => any) => {
-  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+const expectElementDoesntExistAfter = (pluginConfig: object, expectedDurationInSeconds: number, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    let messageStartTime = 0;
     getPlayButtonElement().should('exist').click({force: true});
     getPlayButtonElement()
       .should('not.exist')
+      .then(() => getElement().should('exist'))
       .then(() => {
-        getElement()
-          .should('not.exist')
-          .then(() => {
-            expect(kalturaPlayer.currentTime).to.be.at.least(time);
-          });
-      });
+        messageStartTime = Date.now();
+        return getElement().should('not.exist');
+      })
+      .then(() => expect(Date.now() - messageStartTime).to.be.at.least(expectedDurationInSeconds * 1000));
+    // getPlayButtonElement()
+    //   .should('not.exist')
+    //   .then(() => {
+    //     getElement()
+    //       .should('exist')
+    //       .then(() => {
+    //         getElement()
+    //           .should('not.exist')
+    //           .then(() => {
+    //             // debugger;
+    //             expect(kalturaPlayer.currentTime).to.be.at.least(time);
+    //           });
+    //       });
+    //   });
   });
 };
 
 const expectPopupExistsAt = (pluginConfig: object, time: number) => {
   expectElementExistsAt(pluginConfig, time, getPopupElement);
 };
-const expectPopupDoesntExistAt = (pluginConfig: object, time: number) => {
-  expectElementDoesntExistAt(pluginConfig, time, getPopupElement);
+const expectPopupDoesntExistAfter = (pluginConfig: object, time: number) => {
+  expectElementDoesntExistAfter(pluginConfig, time, getPopupElement);
 };
 const expectOverlayExistsAt = (pluginConfig: object, time: number) => {
   expectElementExistsAt(pluginConfig, time, getOverlayElement);
 };
-const expectOverlayDoesntExistAt = (pluginConfig: object, time: number) => {
-  expectElementDoesntExistAt(pluginConfig, time, getOverlayElement);
+const expectOverlayDoesntExistAfter = (pluginConfig: object, time: number) => {
+  expectElementDoesntExistAfter(pluginConfig, time, getOverlayElement);
 };
 
 describe.only('message timing', () => {
@@ -58,9 +70,20 @@ describe.only('message timing', () => {
           },
           0
         );
+        expectOverlayExistsAt(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {showOnStart: true}
+              }
+            ]
+          },
+          0
+        );
       });
       it('should hide message after duration', () => {
-        expectPopupDoesntExistAt(
+        expectPopupDoesntExistAfter(
           {
             messages: [
               {
@@ -85,18 +108,12 @@ describe.only('message timing', () => {
     // });
   });
   //describe('seeked event');
-  // describe('show on start', () => {
-  //   it('should appear on playback start', () => {
-  //     loadPlayerAndSetMedia({messages: [{title: 'title', timing: {showOnStart: true}}]}).then(() => expectOverlayExists());
-  //   });
-  //   // it('should disappear when duration expires');
-  // });
-  // describe('show on end', () => {
-  //   it('should appear on playback end');
-  //   it('should disappear when duration expires');
-  // });
-  // describe('show at time from start', () => {});
-  // describe('show at time from end', () => {});
+  // message ended normally
+  // message was closed and redisplay is false
+  // message was closed and redisplay is true
+  // seek into a message range
+  // message has duration
+  // message has no duration
   // describe('multiple messages', () => {
   //   describe('one message on start, the other at time from start');
   //   describe('one message on start, the other at time from end');

@@ -1,4 +1,4 @@
-export const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = {}) => {
+const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = {}) => {
   cy.visit('index.html');
   return cy.window().then(win => {
     try {
@@ -38,7 +38,7 @@ const defaultSource: any = {
   ]
 };
 
-export const setMedia = (player: any, sessionConfig = {ks: '5678'}, sourcesConfig = defaultSource) => {
+const setMedia = (player: any, sessionConfig = {ks: '5678'}, sourcesConfig = defaultSource) => {
   player?.setMedia({
     session: sessionConfig,
     sources: sourcesConfig
