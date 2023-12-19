@@ -1,6 +1,7 @@
 import {getOverlayElement, getPlayButtonElement, getPopupElement, loadPlayerAndSetMedia} from './utils/env';
 
 const TITLE = 'title';
+const SET_TIMEOUT_MARGIN = 100;
 
 const expectElementExistsAt = (pluginConfig: object, time: number, getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
@@ -23,21 +24,7 @@ const expectElementDoesntExistAfter = (pluginConfig: object, expectedDurationInS
         messageStartTime = Date.now();
         return getElement().should('not.exist');
       })
-      .then(() => expect(Date.now() - messageStartTime).to.be.at.least(expectedDurationInSeconds * 1000));
-    // getPlayButtonElement()
-    //   .should('not.exist')
-    //   .then(() => {
-    //     getElement()
-    //       .should('exist')
-    //       .then(() => {
-    //         getElement()
-    //           .should('not.exist')
-    //           .then(() => {
-    //             // debugger;
-    //             expect(kalturaPlayer.currentTime).to.be.at.least(time);
-    //           });
-    //       });
-    //   });
+      .then(() => expect(Date.now() - messageStartTime + SET_TIMEOUT_MARGIN).to.be.at.least(expectedDurationInSeconds * 1000));
   });
 };
 
@@ -54,7 +41,7 @@ const expectOverlayDoesntExistAfter = (pluginConfig: object, time: number) => {
   expectElementDoesntExistAfter(pluginConfig, time, getOverlayElement);
 };
 
-describe.only('message timing', () => {
+describe('message timing', () => {
   describe('start time and duration', () => {
     describe('show on start', () => {
       it('should display message on playback start', () => {
@@ -88,6 +75,17 @@ describe.only('message timing', () => {
             messages: [
               {
                 showToast: true,
+                title: TITLE,
+                timing: {showOnStart: true, duration: 2}
+              }
+            ]
+          },
+          2
+        );
+        expectOverlayDoesntExistAfter(
+          {
+            messages: [
+              {
                 title: TITLE,
                 timing: {showOnStart: true, duration: 2}
               }
