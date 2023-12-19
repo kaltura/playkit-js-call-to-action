@@ -76,7 +76,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // @ts-ignore
     const currentTime = this.player.currentTime;
 
-    this.hideActiveMessage();
+    if (this.activeMessage) {
+      this.callToActionManager.removeMessage();
+      this.activeMessageEndTime = -1;
+    }
 
     for (const message of this.messages) {
       if (message.timing.redisplayMessage || !message.wasDismissed) {
