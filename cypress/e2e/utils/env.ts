@@ -1,5 +1,15 @@
 const EXECUTION_TIME_MARGIN = 100;
 
+const defaultSource: any = {
+  id: '1234',
+  progressive: [
+    {
+      mimetype: 'video/mp4',
+      url: './media/video.mp4'
+    }
+  ]
+};
+
 const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = {}) => {
   cy.visit('index.html');
   return cy.window().then(win => {
@@ -30,16 +40,6 @@ const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = {}) => 
   });
 };
 
-const defaultSource: any = {
-  id: '1234',
-  progressive: [
-    {
-      mimetype: 'video/mp4',
-      url: './media/video.mp4'
-    }
-  ]
-};
-
 const setMedia = (player: any, sessionConfig = {ks: '5678'}, sourcesConfig = defaultSource) => {
   player?.setMedia({
     session: sessionConfig,
@@ -47,12 +47,7 @@ const setMedia = (player: any, sessionConfig = {ks: '5678'}, sourcesConfig = def
   });
 };
 
-export const loadPlayerAndSetMedia = (
-  pluginConf = {},
-  playbackConf: Record<string, any> = {},
-  sessionConfig?: any,
-  sourcesConfig?: any
-): Promise<any> => {
+const loadPlayerAndSetMedia = (pluginConf = {}, playbackConf: Record<string, any> = {}, sessionConfig?: any, sourcesConfig?: any): Promise<any> => {
   return new Promise(resolve => {
     loadPlayer(pluginConf, playbackConf).then(kalturaPlayer => {
       setMedia(kalturaPlayer, sessionConfig, sourcesConfig);
@@ -64,9 +59,7 @@ export const loadPlayerAndSetMedia = (
   });
 };
 
-export const getPlayButtonElement = () => cy.get('.playkit-pre-playback-play-button');
-export const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
-export const getPopupElement = () => cy.get('[data-testid="call-to-action-popup"]');
+const getPlayButtonElement = () => cy.get('.playkit-pre-playback-play-button');
 
 export const expectContains = (pluginConfig: any, texts: string[], getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {

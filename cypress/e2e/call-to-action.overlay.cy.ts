@@ -6,8 +6,7 @@ import {
   expectElementExists,
   expectElementExistsAt,
   expectLoadMedia,
-  expectWindowOpen,
-  getOverlayElement
+  expectWindowOpen
 } from './utils/env';
 
 const TITLE = 'cta title';
@@ -16,6 +15,8 @@ const BUTTON_1_LABEL = 'cta button 1';
 const BUTTON_2_LABEL = 'cta button 2';
 const BUTTON_LINK_URL = 'http://www.google.com';
 const BUTTON_LINK_ENTRY = 'test';
+
+const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
 
 const getCloseButton = () => cy.get('[data-testid="call-to-action-overlay-close-button"] button');
 

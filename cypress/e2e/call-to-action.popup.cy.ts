@@ -6,8 +6,7 @@ import {
   expectElementExists,
   expectElementExistsAt,
   expectLoadMedia,
-  expectWindowOpen,
-  getPopupElement
+  expectWindowOpen
 } from './utils/env';
 
 const TITLE = 'cta title';
@@ -17,6 +16,7 @@ const BUTTON_2_LABEL = 'cta button 2';
 const BUTTON_LINK_URL = 'http://www.google.com';
 const BUTTON_LINK_ENTRY = 'test';
 
+const getPopupElement = () => cy.get('[data-testid="call-to-action-popup"]');
 const getCloseButton = () => cy.get('[data-testid="call-to-action-popup-close-button"] button');
 
 const expectContainsInPopup = (pluginConfig: any, texts: string[]) => expectContains(pluginConfig, texts, getPopupElement);
