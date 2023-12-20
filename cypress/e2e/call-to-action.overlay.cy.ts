@@ -3,8 +3,12 @@ import {
   expectContains,
   expectElementDoesntExist,
   expectElementDoesntExistAfter,
+  expectElementDoesntExistAfterCloseAndSeek,
   expectElementExists,
+  expectElementExistsAfterCloseAndSeek,
+  expectElementExistsAfterSeek,
   expectElementExistsAt,
+  expectElementExistsForTimeAfterSeek,
   expectLoadMedia,
   expectWindowOpen
 } from './utils/env';
@@ -290,23 +294,81 @@ describe('call to action overlay', () => {
         });
       });
     });
-    //describe('seeked event');
-    // message ended normally
-    // message was closed and redisplay is false
-    // message was closed and redisplay is true
-    // seek into a message range
-    // message has duration
-    // message has no duration
-    // describe('multiple messages', () => {
-    //   describe('one message on start, the other at time from start');
-    //   describe('one message on start, the other at time from end');
-    //   describe('one message on start, the other on end');
-    //   describe('two messages at time from start');
-    //   describe('one at time from start, the other at time from end');
-    //   describe('two messages at time from end');
-    //   describe('one message on end, the other at time from start');
-    //   describe('one message on end, the other at time from end');
-    // });
+    describe('seeking to a different time', () => {
+      it('should show a message again if it ended without being closed', () => {
+        expectElementExistsAfterSeek(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  showOnStart: true,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          0,
+          getOverlayElement
+        );
+      });
+      it('should not show a message again if it was closed', () => {
+        expectElementDoesntExistAfterCloseAndSeek(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  showOnStart: true,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          0,
+          getCloseButton,
+          getOverlayElement
+        );
+      });
+      it('should show a message if again if it was closed but has redisplayMessage set to true', () => {
+        expectElementExistsAfterCloseAndSeek(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  redisplayMessage: true,
+                  showOnStart: true,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          0,
+          getCloseButton,
+          getOverlayElement
+        );
+      });
+      it('should show a message when seeking into its time range until its remaining duration ends', () => {
+        expectElementExistsForTimeAfterSeek(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  redisplayMessage: true,
+                  showOnStart: true,
+                  duration: 3
+                }
+              }
+            ]
+          },
+          1,
+          2,
+          getOverlayElement
+        );
+      });
+    });
   });
   describe('overlay content', () => {
     it('should show title', () => {

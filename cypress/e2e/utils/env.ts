@@ -150,3 +150,69 @@ export const expectElementDoesntExistAfter = (pluginConfig: object, expectedStar
       .then(() => expect(Date.now() - timestampOnStart + EXECUTION_TIME_MARGIN).to.be.at.least(1000 * (expectedDuration - startTimeDelta)));
   });
 };
+
+export const expectElementExistsAfterSeek = (pluginConfig: object, seekTo: number, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => getElement().should('not.exist'))
+      .then(() => {
+        kalturaPlayer.currentTime = seekTo;
+        return getElement().should('exist');
+      });
+  });
+};
+
+export const expectElementExistsAfterCloseAndSeek = (pluginConfig: object, seekTo: number, getCloseButton: () => any, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => getCloseButton().click({force: true}))
+      .then(() => getElement().should('not.exist'))
+      .then(() => {
+        kalturaPlayer.currentTime = 0;
+        return getElement().should('exist');
+      });
+  });
+};
+
+export const expectElementDoesntExistAfterCloseAndSeek = (pluginConfig: object, seekTo: number, getCloseButton: () => any, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => getCloseButton().click({force: true}))
+      .then(() => getElement().should('not.exist'))
+      .then(() => {
+        kalturaPlayer.currentTime = seekTo;
+        return getElement().should('not.exist');
+      });
+  });
+};
+
+export const expectElementExistsForTimeAfterSeek = (pluginConfig: object, seekTo: number, maxDuration: number, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    let startTimeStamp = 0;
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => getElement().should('not.exist'))
+      .then(() => {
+        kalturaPlayer.currentTime = seekTo;
+        return getElement().should('exist');
+      })
+      .then(() => {
+        startTimeStamp = Date.now();
+        return getElement().should('not.exist');
+      })
+      .then(() => {
+        expect(Date.now() - startTimeStamp).to.be.lessThan(maxDuration * 1000);
+      });
+  });
+};
