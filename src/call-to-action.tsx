@@ -21,7 +21,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.callToActionManager = new CallToActionManager(player, this.floatingManager);
+    this.callToActionManager = new CallToActionManager(player, this.floatingManager, this.eventManager);
   }
 
   static isValid() {
