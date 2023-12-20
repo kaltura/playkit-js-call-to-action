@@ -17,14 +17,14 @@ class CallToActionManager {
   private popupInstance: FloatingItem | null = null;
   private floatingManager: FloatingManager;
   private hideMessageTimeout = -1;
-  private willPlay = false;
+  private playQueued = false;
 
   constructor(player: KalturaPlayer, floatingManager: FloatingManager, eventManager: PlaykitUI.EventManager) {
     this.player = player;
     this.store = ui.redux.useStore();
     this.floatingManager = floatingManager;
     eventManager.listen(player, this.player.Event.Core.PLAYING, () => {
-      this.willPlay = false;
+      this.playQueued = false;
       if (this.removeActiveOverlay) {
         this.player.pause();
       }
@@ -67,7 +67,7 @@ class CallToActionManager {
   }
 
   private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void) {
-    if (!this.player.paused || this.willPlay) {
+    if (!this.player.paused || this.playQueued) {
       this.player.pause();
       this.playOnClose = true;
     }
@@ -110,7 +110,7 @@ class CallToActionManager {
   private onOverlayCloseClick() {
     this.removeOverlay();
     if (this.playOnClose) {
-      this.willPlay = true;
+      this.playQueued = true;
       this.player.play();
       this.playOnClose = false;
     }
