@@ -140,7 +140,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
             message.timing.showOnEnd === true ||
             (message.timing.timeFromStart !== undefined && message.timing.timeFromStart >= 0) ||
             (message.timing.timeFromEnd !== undefined && message.timing.timeFromEnd >= 0));
-        const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
+        const durationValid = message.timing && (message.timing.duration === undefined || message.timing.duration > 0);
         const contentValid = message.description || message.title || message.buttons.length;
 
         return durationValid && timingValid && contentValid;
@@ -218,8 +218,9 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
     if (showOnStart) return !duration || currentTime <= duration;
     if (showOnEnd) return currentTime === videoDuration;
-    if (timeFromStart) return currentTime >= timeFromStart && (!duration || currentTime <= timeFromStart + duration);
-    if (timeFromEnd) return currentTime >= videoDuration - timeFromEnd && (!duration || currentTime <= videoDuration - timeFromEnd + duration);
+    if (timeFromStart !== undefined) return currentTime >= timeFromStart && (!duration || currentTime <= timeFromStart + duration);
+    if (timeFromEnd !== undefined)
+      return currentTime >= videoDuration - timeFromEnd && (!duration || currentTime <= videoDuration - timeFromEnd + duration);
   }
 
   public reset() {
