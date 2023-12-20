@@ -1,3 +1,5 @@
+const EXECUTION_TIME_MARGIN = 100;
+
 const loadPlayer = (pluginConf = {}, playbackConf: Record<string, any> = {}) => {
   cy.visit('index.html');
   return cy.window().then(win => {
@@ -76,7 +78,7 @@ export const expectContains = (pluginConfig: any, texts: string[], getElement: (
   });
 };
 
-export const expectCloseButton = (pluginConfig: any, getElement: () => any, getCloseButton: () => any) => {
+export const expectCloseButton = (pluginConfig: any, getCloseButton: () => any, getElement: () => any) => {
   loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
     getPlayButtonElement().should('not.exist');
@@ -106,5 +108,52 @@ export const expectLoadMedia = (pluginConfig: any, buttonLabel: string, buttonLi
     getPlayButtonElement().should('not.exist');
     getElement().contains(buttonLabel).click({force: true});
     cy.get('@LoadMedia').should('have.been.calledOnceWith', {entryId: buttonLink});
+  });
+};
+
+export const expectElementExists = (pluginConfig: object, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'));
+  });
+};
+
+export const expectElementDoesntExist = (pluginConfig: object, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('not.exist'));
+  });
+};
+
+export const expectElementExistsAt = (pluginConfig: object, expectedStartTime: number, getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => getElement().should('exist'))
+      .then(() => expect(kalturaPlayer.currentTime).to.be.at.least(expectedStartTime));
+  });
+};
+
+export const expectElementDoesntExistAfter = (pluginConfig: object, expectedStartTime: number, expectedDuration: number, getElement: () => any) => {
+  let startTimeDelta = 0;
+  let timestampOnStart = 0;
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => {
+        return getElement().should('exist');
+      })
+      .then(() => {
+        timestampOnStart = Date.now();
+        startTimeDelta = kalturaPlayer.currentTime - expectedStartTime;
+        return getElement().should('not.exist');
+      })
+      .then(() => expect(Date.now() - timestampOnStart + EXECUTION_TIME_MARGIN).to.be.at.least(1000 * (expectedDuration - startTimeDelta)));
   });
 };
