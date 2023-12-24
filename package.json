@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/call-to-action",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/playkit-call-to-action.js",
   "scripts": {
