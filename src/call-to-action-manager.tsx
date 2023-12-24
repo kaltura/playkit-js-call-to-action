@@ -1,4 +1,4 @@
-import {KalturaPlayer, ui} from '@playkit-js/kaltura-player-js';
+import {KalturaPlayer, ui, PlaykitUI} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
 
 import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
@@ -17,11 +17,18 @@ class CallToActionManager {
   private popupInstance: FloatingItem | null = null;
   private floatingManager: FloatingManager;
   private hideMessageTimeout = -1;
+  private playQueued = false;
 
-  constructor(player: KalturaPlayer, floatingManager: FloatingManager) {
+  constructor(player: KalturaPlayer, floatingManager: FloatingManager, eventManager: PlaykitUI.EventManager) {
     this.player = player;
     this.store = ui.redux.useStore();
     this.floatingManager = floatingManager;
+    eventManager.listen(player, this.player.Event.Core.PLAYING, () => {
+      this.playQueued = false;
+      if (this.removeActiveOverlay) {
+        this.player.pause();
+      }
+    });
   }
 
   private showPopup({
@@ -60,7 +67,7 @@ class CallToActionManager {
   }
 
   private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void) {
-    if (!this.player.paused) {
+    if (!this.player.paused || this.playQueued) {
       this.player.pause();
       this.playOnClose = true;
     }
@@ -103,6 +110,7 @@ class CallToActionManager {
   private onOverlayCloseClick() {
     this.removeOverlay();
     if (this.playOnClose) {
+      this.playQueued = true;
       this.player.play();
       this.playOnClose = false;
     }

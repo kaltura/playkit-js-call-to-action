@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/call-to-action",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/playkit-call-to-action.js",
   "scripts": {
@@ -79,7 +79,7 @@
   "kaltura": {
     "name": "call-to-action",
     "dependencies": {
-      "playkit-ui-managers": "1.4.2"
+      "playkit-ui-managers": "1.5.0"
     }
   }
 }
