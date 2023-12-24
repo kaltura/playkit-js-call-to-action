@@ -7,7 +7,7 @@
 [![](https://img.shields.io/npm/v/@playkit-js/call-to-action/latest.svg)](https://www.npmjs.com/package/@playkit-js/call-to-action)
 [![](https://img.shields.io/npm/v/@playkit-js/call-to-action/canary.svg)](https://www.npmjs.com/package/@playkit-js/call-to-action/v/canary)
 
-This plugin allows adding configurable dialogs to the kaltura video player which will appear at a specific time during playback.
+This plugin for the [Kaltura Player] allows adding customizable dialogs to the player which can appear at a specific time during video playback.
 
 PlayKit JS Call To Action is written in [ECMAScript6], statically analysed using [Typescript] and transpiled in ECMAScript5 using [Babel].
 
