@@ -81,9 +81,9 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 </div>
 ```
 
-#### Configuation
+## Documentation
 
-TBD
+- [**Configuration**](./docs/configuration.md)
 
 ### And coding style tests
 
