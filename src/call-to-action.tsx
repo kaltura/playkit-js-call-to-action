@@ -123,9 +123,18 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private filterMessages() {
     this.messages = this.config.messages
       .map(message => {
-        const {buttons} = message;
+        const {buttons, timing} = message;
+
+        if (timing?.timeFromStart !== undefined && timing?.timeFromStart < 0) {
+          timing.timeFromStart = undefined;
+        }
+        if (timing?.timeFromEnd !== undefined && timing?.timeFromEnd < 0) {
+          timing.timeFromEnd = undefined;
+        }
+
         return {
           ...message,
+          timing,
           buttons: buttons
             ? buttons.filter(button => {
                 return button.label && typeof button.label === 'string' && button.link && typeof button.link === 'string';
@@ -138,8 +147,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
           message.timing &&
           (message.timing.showOnStart === true ||
             message.timing.showOnEnd === true ||
-            (message.timing.timeFromStart !== undefined && message.timing.timeFromStart >= 0) ||
-            (message.timing.timeFromEnd !== undefined && message.timing.timeFromEnd >= 0));
+            message.timing.timeFromStart !== undefined ||
+            message.timing.timeFromEnd !== undefined);
         const durationValid = message.timing && (!message.timing.duration || message.timing.duration > 0);
         const contentValid = message.description || message.title || message.buttons.length;
 
@@ -160,8 +169,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const videoDuration = this.player.duration;
-    const messageAStartTime = messageA.timing.timeFromEnd ? videoDuration - messageA.timing.timeFromEnd : messageA.timing.timeFromStart;
-    const messageBStartTime = messageB.timing.timeFromEnd ? videoDuration - messageB.timing.timeFromEnd : messageB.timing.timeFromStart;
+    const messageAStartTime = messageA.timing.timeFromEnd !== undefined ? videoDuration - messageA.timing.timeFromEnd : messageA.timing.timeFromStart;
+    const messageBStartTime = messageB.timing.timeFromEnd !== undefined ? videoDuration - messageB.timing.timeFromEnd : messageB.timing.timeFromStart;
 
     return messageAStartTime! - messageBStartTime!;
   }
@@ -194,14 +203,14 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     if (showOnStart) {
       return duration - currentTime;
     }
-    if (timeFromStart) {
-      return timeFromStart + duration - currentTime;
-    }
-    if (timeFromEnd) {
-      return videoDuration - timeFromEnd + duration - currentTime;
-    }
     if (showOnEnd) {
       return currentTime < duration ? 0 : duration;
+    }
+    if (timeFromStart !== undefined) {
+      return timeFromStart + duration - currentTime;
+    }
+    if (timeFromEnd !== undefined) {
+      return videoDuration - timeFromEnd + duration - currentTime;
     }
   }
 
@@ -218,8 +227,9 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
     if (showOnStart) return !duration || currentTime <= duration;
     if (showOnEnd) return currentTime === videoDuration;
-    if (timeFromStart) return currentTime >= timeFromStart && (!duration || currentTime <= timeFromStart + duration);
-    if (timeFromEnd) return currentTime >= videoDuration - timeFromEnd && (!duration || currentTime <= videoDuration - timeFromEnd + duration);
+    if (timeFromStart !== undefined) return currentTime >= timeFromStart && (!duration || currentTime <= timeFromStart + duration);
+    if (timeFromEnd !== undefined)
+      return currentTime >= videoDuration - timeFromEnd && (!duration || currentTime <= videoDuration - timeFromEnd + duration);
   }
 
   public reset() {
