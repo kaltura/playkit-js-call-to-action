@@ -182,6 +182,6 @@ To set data for a button, both the button label and the button link need to be s
 
 ### Message timing
 
-At least one of the message timing fields must be set to a valid value.
+At least one of the message start time fields - showOnStart, showOnEnd, timeFromStart or timeFromEnd - must be set to a valid value.
 A message will appear at its start time and be visible until either: its duration expires (if duration is set), or until it is dismissed by the user.
 If the user seeks back into a message's time range after it has already been displayed, the message will appear again, unless either: it was dismissed by the user, or [redisplayMessage](#redisplaymessage) is true.
