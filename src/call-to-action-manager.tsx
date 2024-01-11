@@ -15,20 +15,22 @@ class CallToActionManager {
   private store: any;
   private player: KalturaPlayer;
   private popupInstance: FloatingItem | null = null;
-  private floatingManager: FloatingManager;
   private hideMessageTimeout = -1;
   private playQueued = false;
 
-  constructor(player: KalturaPlayer, floatingManager: FloatingManager, eventManager: PlaykitUI.EventManager) {
+  constructor(player: KalturaPlayer, eventManager: PlaykitUI.EventManager) {
     this.player = player;
     this.store = ui.redux.useStore();
-    this.floatingManager = floatingManager;
     eventManager.listen(player, this.player.Event.Core.PLAYING, () => {
       this.playQueued = false;
       if (this.removeActiveOverlay) {
         this.player.pause();
       }
     });
+  }
+
+  private get floatingManager(): FloatingManager {
+    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   private showPopup({

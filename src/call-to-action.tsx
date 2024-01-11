@@ -1,5 +1,4 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
-import {FloatingManager} from '@playkit-js/ui-managers';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 
@@ -21,15 +20,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.callToActionManager = new CallToActionManager(player, this.floatingManager, this.eventManager);
+    this.callToActionManager = new CallToActionManager(player, this.eventManager);
   }
 
   static isValid() {
     return true;
-  }
-
-  private get floatingManager(): FloatingManager {
-    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   protected loadMedia(): void {
