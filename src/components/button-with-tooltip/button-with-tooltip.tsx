@@ -11,6 +11,15 @@ const ButtonWithTooltip = ({type, label, onClick}: ButtonWithTooltipProps) => {
 
   const [isFinalized, setIsFinalized] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
+  const onClickWrapper = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    if (onClick) {
+      onClick();
+    }
+  };
 
   useEffect(() => {
     if (!isFinalized && buttonRef) {
@@ -23,18 +32,18 @@ const ButtonWithTooltip = ({type, label, onClick}: ButtonWithTooltipProps) => {
 
   if (!isFinalized) {
     return (
-      <Button type={type} tooltip={{label}} onClick={onClick} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)} disabled={false}>
+      <Button type={type} tooltip={{label}} onClick={onClickWrapper} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)} disabled={false}>
         {label}
       </Button>
     );
   }
 
   return showTooltip ? (
-    <Button type={type} tooltip={{label}} onClick={onClick} disabled={false}>
+    <Button type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false}>
       {label}
     </Button>
   ) : (
-    <Button type={type} onClick={onClick} disabled={false}>
+    <Button type={type} onClick={onClickWrapper} disabled={false}>
       {label}
     </Button>
   );
