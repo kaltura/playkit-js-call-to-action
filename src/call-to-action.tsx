@@ -34,9 +34,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     }
 
     if (this.messages.length) {
-      this.eventManager.listenOnce(this.player, this.player.Event.Core.CAN_PLAY, () => {
-        this.sortMessages();
-      });
+      this.eventManager.listenOnce(this.player, this.player.Event.Core.LOADED_DATA, () => this.sortMessages());
       this.eventManager.listen(this.player, this.player.Event.Core.TIME_UPDATE, () => this.onTimeUpdate());
       this.eventManager.listen(this.player, this.player.Event.Core.SEEKED, () => this.onSeeked());
     }
