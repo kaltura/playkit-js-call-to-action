@@ -179,6 +179,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
+
+    this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
       message,
       duration,
