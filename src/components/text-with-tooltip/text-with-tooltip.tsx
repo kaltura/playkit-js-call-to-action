@@ -12,7 +12,7 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
   const [isFinalized, setIsFinalized] = useState(false);
 
   useLayoutEffect(() => {
-    if (textRef?.current && comparisonTextRef?.current) {
+    if (!isFinalized && textRef?.current && comparisonTextRef?.current) {
       setIsFinalized(true);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -22,7 +22,7 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
       const comparisonTextHeight = comparisonTextRef?.current?.getBoundingClientRect().height;
       setShowTooltip(textHeight < comparisonTextHeight);
     }
-  }, [isFinalized]);
+  });
 
   const textElement = (
     <div ref={textRef} style={{'-webkit-line-clamp': numberOfLines}} className={styles.text}>
