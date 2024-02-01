@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.5 (2024-02-01)
+
+
+### Bug Fixes
+
+* **FEC-13650:** Player v7 | CTA | CTA doesn't show when seeking backwards for the second CTA. ([d8fa6ee](https://github.com/kaltura/playkit-js-call-to-action/commit/d8fa6ee3ba5fdf2923b3c1f95ff7ae9498438d43))
+
 ### 1.0.4 (2024-01-14)
 
 
