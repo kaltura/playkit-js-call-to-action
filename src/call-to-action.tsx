@@ -1,5 +1,4 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
-import {FloatingManager} from '@playkit-js/ui-managers';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 
@@ -21,15 +20,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
-    this.callToActionManager = new CallToActionManager(player, this.floatingManager, this.eventManager);
+    this.callToActionManager = new CallToActionManager(player, this.eventManager);
   }
 
   static isValid() {
     return true;
-  }
-
-  private get floatingManager(): FloatingManager {
-    return (this.player.getService('floatingManager') as FloatingManager) || {};
   }
 
   protected loadMedia(): void {
@@ -39,6 +34,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     }
 
     if (this.messages.length) {
+      this.eventManager.listenOnce(this.player, this.player.Event.Core.LOADED_DATA, () => this.sortMessages());
       this.eventManager.listen(this.player, this.player.Event.Core.TIME_UPDATE, () => this.onTimeUpdate());
       this.eventManager.listen(this.player, this.player.Event.Core.SEEKED, () => this.onSeeked());
     }
@@ -79,6 +75,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     if (this.activeMessage) {
       this.callToActionManager.removeMessage();
       this.activeMessageEndTime = -1;
+      this.activeMessage = null;
     }
 
     for (const message of this.messages) {
@@ -117,7 +114,12 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     ) {
       this.callToActionManager.removeMessage();
       this.activeMessageEndTime = -1;
+      this.activeMessage = null;
     }
+  }
+
+  private sortMessages() {
+    this.messages.sort((messageA: MessageData, messageB: MessageData) => this.compareMessagesByTiming(messageA, messageB));
   }
 
   private filterMessages() {
@@ -153,8 +155,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         const contentValid = message.description || message.title || message.buttons.length;
 
         return durationValid && timingValid && contentValid;
-      })
-      .sort((messageA: MessageData, messageB: MessageData) => this.compareMessagesByTiming(messageA, messageB));
+      });
   }
 
   private compareMessagesByTiming(messageA: MessageData, messageB: MessageData) {
@@ -178,6 +179,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
+
+    this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
       message,
       duration,
