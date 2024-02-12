@@ -216,3 +216,18 @@ export const expectElementExistsForTimeAfterSeek = (pluginConfig: object, seekTo
       });
   });
 };
+
+export const expectElementsInOrder = (pluginConfig: object, messages: {messageStartTime?: number; messageText: string}[], getElement: () => any) => {
+  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+    getPlayButtonElement().should('exist').click({force: true});
+    getPlayButtonElement()
+      .should('not.exist')
+      .then(() => {
+        return messages.reduce((chain: any, message) => {
+          return chain.then(() => {
+            return getElement().contains(message.messageText).should('exist');
+          });
+        }, Promise.resolve());
+      });
+  });
+};

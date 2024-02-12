@@ -10,6 +10,7 @@ import {
   expectElementExistsAt,
   expectElementExistsForTimeAfterSeek,
   expectLoadMedia,
+  expectElementsInOrder,
   expectWindowOpen
 } from './utils/env';
 
@@ -44,6 +45,9 @@ const expectPopupExistsAt = (pluginConfig: object, expectedStartTime: number) =>
 };
 const expectPopupDoesntExistAfter = (pluginConfig: object, expectedStartTime: number, expectedDuration: number) => {
   expectElementDoesntExistAfter(pluginConfig, expectedStartTime, expectedDuration, getPopupElement);
+};
+const expectPopupElementsInOrder = (pluginConfig: Object, messsages: {messageStartTime?: number; messageText: string}[]) => {
+  expectElementsInOrder(pluginConfig, messsages, getPopupElement);
 };
 
 describe('call to action popup', () => {
@@ -150,7 +154,7 @@ describe('call to action popup', () => {
         it('should show message if timeFromEnd is zero', () => {
           expectPopupDoesntExist({messages: [{showToast: true, buttons: [{label: 'aaa', link: 'aaa'}], timing: {timeFromEnd: 0}}]});
         });
-        it('should not show message if timeFromEnd is not a negative number', () => {
+        it('should not show message if timeFromEnd is a negative number', () => {
           expectPopupDoesntExist({messages: [{showToast: true, buttons: [{label: 'aaa', link: 'aaa'}], timing: {timeFromEnd: -1}}]});
         });
         it('should not show message if timeFromEnd is not a number', () => {
@@ -158,13 +162,13 @@ describe('call to action popup', () => {
         });
       });
       describe('duration', () => {
-        it('should show message if duration is not a positive number', () => {
+        it('should show message if duration is a positive number', () => {
           expectPopupExists({messages: [{showToast: true, buttons: [{label: 'aaa', link: 'aaa'}], timing: {showOnStart: true, duration: 1}}]});
         });
         it('should not show message if duration is zero', () => {
           expectPopupDoesntExist({messages: [{showToast: true, buttons: [{label: 'aaa', link: 'aaa'}], timing: {showOnStart: true, duration: 0}}]});
         });
-        it('should not show message if duration is negative', () => {
+        it('should not show message if duration is a negative number', () => {
           expectPopupDoesntExist({
             messages: [{showToast: true, buttons: [{label: 'aaa', link: 'aaa'}], timing: {showOnStart: true, duration: -1}}]
           });
@@ -280,11 +284,11 @@ describe('call to action popup', () => {
                 {
                   showToast: true,
                   title: TITLE,
-                  timing: {timeFromEnd: 2}
+                  timing: {timeFromEnd: 1}
                 }
               ]
             },
-            2
+            3
           );
         });
         it('should hide message after duration', () => {
@@ -381,6 +385,257 @@ describe('call to action popup', () => {
           2,
           getPopupElement
         );
+      });
+    });
+    describe('messages order', () => {
+      describe('first message is showOnStart', () => {
+        it('should show both messages in the correct order if the second message is timeFromStart', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    showOnStart: true
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromStart: 2
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    showOnStart: true
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromEnd: 3
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is showOnEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    showOnStart: true
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    showOnEnd: true
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+      });
+      describe('first message is timeFromStart', () => {
+        it('should show both messages in the correct order if the second message is timeFromStart', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromStart: 1
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromStart: 3
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromStart: 1
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromEnd: 0
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is showOnEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromStart: 1
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    showOnEnd: true
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+
+        it('should show three messages in the correct order if the second message is timeFromStart and the third message is timeFromEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromStart: 1
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromStart: 2
+                  }
+                },
+                {
+                  showToast: true,
+                  buttons: [
+                    {
+                      label: BUTTON_1_LABEL,
+                      link: BUTTON_LINK_URL
+                    }
+                  ],
+                  timing: {
+                    timeFromEnd: 1
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}, {messageText: BUTTON_1_LABEL}]
+          );
+        });
+      });
+      describe('first message is timeFromEnd', () => {
+        it('should show both messages in the correct order if the second message is timeFromStart', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromStart: 3
+                  }
+                },
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromEnd: 4
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    timeFromEnd: 0
+                  }
+                },
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromEnd: 3
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
+        it('should show both messages in the correct order if the second message is showOnEnd', () => {
+          expectPopupElementsInOrder(
+            {
+              messages: [
+                {
+                  showToast: true,
+                  title: TITLE,
+                  timing: {
+                    timeFromEnd: 3
+                  }
+                },
+                {
+                  showToast: true,
+                  description: DESCRIPTION,
+                  timing: {
+                    showOnEnd: true
+                  }
+                }
+              ]
+            },
+            [{messageText: TITLE}, {messageText: DESCRIPTION}]
+          );
+        });
       });
     });
   });
