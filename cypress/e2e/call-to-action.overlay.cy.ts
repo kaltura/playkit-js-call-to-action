@@ -9,6 +9,7 @@ import {
   expectElementExistsAfterSeek,
   expectElementExistsAt,
   expectElementExistsForTimeAfterSeek,
+  expectElementsInOrder,
   expectLoadMedia,
   expectWindowOpen
 } from './utils/env';
@@ -17,7 +18,7 @@ const TITLE = 'cta title';
 const DESCRIPTION = 'cta description';
 const BUTTON_1_LABEL = 'cta button 1';
 const BUTTON_2_LABEL = 'cta button 2';
-const BUTTON_LINK_URL = 'http://www.google.com';
+const BUTTON_LINK_URL = 'http:www.google.com';
 const BUTTON_LINK_ENTRY = 'test';
 
 const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
@@ -47,6 +48,9 @@ const expectOverlayExistsAt = (pluginConfig: object, expectedStartTime: number) 
 };
 const expectOverlayDoesntExistAfter = (pluginConfig: object, expectedStartTime: number, expectedDuration: number) => {
   expectElementDoesntExistAfter(pluginConfig, expectedStartTime, expectedDuration, getOverlayElement);
+};
+const expectOverlayElementsInOrder = (pluginConfig: Object, messsages: {messageStartTime?: number; messageText: string}[]) => {
+  expectElementsInOrder(pluginConfig, messsages, getOverlayElement);
 };
 
 describe('call to action overlay', () => {
@@ -370,6 +374,250 @@ describe('call to action overlay', () => {
       });
     });
   });
+  describe.only('messages order', () => {
+    describe('first message is showOnStart', () => {
+      it('should show both messages in the correct order if the second message is timeFromStart', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  showOnStart: true,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromStart: 2
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  showOnStart: true,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromEnd: 3
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is showOnEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  showOnStart: true,
+                  duration: 2
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  showOnEnd: true
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+    });
+    describe('first message is timeFromStart', () => {
+      it('should show both messages in the correct order if the second message is timeFromStart', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromStart: 1,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromStart: 3,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromStart: 1,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromEnd: 0,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is showOnEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromStart: 1,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  showOnEnd: true
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show three messages in the correct order if the second message is timeFromStart and the third message is timeFromEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromStart: 1,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromStart: 2,
+                  duration: 1
+                }
+              },
+              {
+                buttons: [
+                  {
+                    label: BUTTON_1_LABEL,
+                    link: BUTTON_LINK_URL
+                  }
+                ],
+                timing: {
+                  timeFromEnd: 1,
+                  duration: 1
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}, {messageText: BUTTON_1_LABEL}]
+        );
+      });
+    });
+    describe('first message is timeFromEnd', () => {
+      it('should show both messages in the correct order if the second message is timeFromStart', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromEnd: 4,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromStart: 3
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is timeFromEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromEnd: 3,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  timeFromEnd: 0
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+      it('should show both messages in the correct order if the second message is showOnEnd', () => {
+        expectOverlayElementsInOrder(
+          {
+            messages: [
+              {
+                title: TITLE,
+                timing: {
+                  timeFromEnd: 3,
+                  duration: 1
+                }
+              },
+              {
+                description: DESCRIPTION,
+                timing: {
+                  showOnEnd: true
+                }
+              }
+            ]
+          },
+          [{messageText: TITLE}, {messageText: DESCRIPTION}]
+        );
+      });
+    });
+  });
+
   describe('overlay content', () => {
     it('should show title', () => {
       expectContainsInOverlay({messages: [{title: TITLE, timing: {showOnStart: true}}]}, [TITLE]);
