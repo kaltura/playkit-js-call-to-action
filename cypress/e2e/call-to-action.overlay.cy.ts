@@ -18,7 +18,7 @@ const TITLE = 'cta title';
 const DESCRIPTION = 'cta description';
 const BUTTON_1_LABEL = 'cta button 1';
 const BUTTON_2_LABEL = 'cta button 2';
-const BUTTON_LINK_URL = 'http:www.google.com';
+const BUTTON_LINK_URL = 'http://www.google.com';
 const BUTTON_LINK_ENTRY = 'test';
 
 const getOverlayElement = () => cy.get('[data-testid="call-to-action-overlay"]');
@@ -374,7 +374,7 @@ describe('call to action overlay', () => {
       });
     });
   });
-  describe.only('messages order', () => {
+  describe('messages order', () => {
     describe('first message is showOnStart', () => {
       it('should show both messages in the correct order if the second message is timeFromStart', () => {
         expectOverlayElementsInOrder(
