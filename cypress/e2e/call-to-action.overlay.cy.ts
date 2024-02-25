@@ -362,13 +362,13 @@ describe('call to action overlay', () => {
                 timing: {
                   redisplayMessage: true,
                   showOnStart: true,
-                  duration: 3
+                  duration: 2
                 }
               }
             ]
           },
           1,
-          2,
+          1.5,
           getOverlayElement
         );
       });
