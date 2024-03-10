@@ -10,18 +10,24 @@ const DESCRIPTION_LINES_SMALL = 2;
 const DESCRIPTION_LINES_LARGE = 4;
 
 class CallToActionManager {
-  private playOnClose = false;
-  private removeActiveOverlay: null | (() => void) = null;
-  private store: any;
   private player: KalturaPlayer;
+  private eventManager: PlaykitUI.EventManager;
+  private store: any;
+
+  private removeActiveOverlay: null | (() => void) = null;
   private popupInstance: FloatingItem | null = null;
   private hideMessageTimeout = -1;
   private playQueued = false;
+  private playOnClose = false;
 
   constructor(player: KalturaPlayer, eventManager: PlaykitUI.EventManager) {
     this.player = player;
     this.store = ui.redux.useStore();
-    eventManager.listen(player, this.player.Event.Core.PLAYING, () => {
+    this.eventManager = eventManager;
+  }
+
+  public init() {
+    this.eventManager.listen(this.player, this.player.Event.Core.PLAYING, () => {
       this.playQueued = false;
       if (this.removeActiveOverlay) {
         this.player.pause();
@@ -176,6 +182,15 @@ class CallToActionManager {
       window.clearTimeout(this.hideMessageTimeout);
       this.hideMessageTimeout = -1;
     }
+  }
+
+  public reset() {
+    this.removeMessage();
+    this.removeActiveOverlay = null;
+    this.popupInstance = null;
+    this.hideMessageTimeout = -1;
+    this.playQueued = false;
+    this.playOnClose = false;
   }
 }
 
