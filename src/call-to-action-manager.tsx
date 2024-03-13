@@ -6,9 +6,9 @@ import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
 import {MessageButtonData, MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
-import { CallToActionEvents } from './events/events';
+import {CallToActionEvents} from './events/events';
 
-const  { FakeEvent, EventType } = core;
+const {FakeEvent} = core;
 
 const DESCRIPTION_LINES_SMALL = 2;
 const DESCRIPTION_LINES_LARGE = 4;

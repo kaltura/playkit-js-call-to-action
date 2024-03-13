@@ -12,7 +12,7 @@ export {VERSION, NAME};
 
 const pluginName = 'callToAction';
 
-export {CallToActionEvents} from './events/events'
+export {CallToActionEvents} from './events/events';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
