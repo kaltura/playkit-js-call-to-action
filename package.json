@@ -12,6 +12,7 @@
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "release": "standard-version",
     "eslint": "eslint . --color",
+    "eslint:fix": "eslint . --color --fix",
     "prettier:fix": "prettier --write ."
   },
   "repository": {
