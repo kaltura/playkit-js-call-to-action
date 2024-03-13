@@ -4,7 +4,7 @@ import {ButtonWithTooltip} from '../button-with-tooltip';
 import * as styles from './call-to-action-buttons.scss';
 import {MessageButtonData, MessageButtonType} from '../../types';
 
-const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonData>; onClick: (link: string) => void}) => {
+const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonData>; onClick: (messageButtonData: MessageButtonData) => void}) => {
   if (!buttons.length) {
     return null;
   } else if (buttons.length === 1) {
@@ -13,7 +13,7 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
     return (
       <div className={`${styles.callToActionButtons}`}>
-        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button.link)} />
+        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button)} />
       </div>
     );
   }
@@ -24,8 +24,8 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
   return (
     <div className={`${styles.callToActionButtons} ${styles.twoButtons}`}>
-      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1.link)} />
-      <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2.link)} />
+      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1)} />
+      <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2)} />
     </div>
   );
 };
