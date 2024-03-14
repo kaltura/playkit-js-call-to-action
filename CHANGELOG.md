@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.7 (2024-03-14)
+
+
+### Bug Fixes
+
+* **FEC-13700:** Call To Action - Overlay message with showOnStart true does not resume video playback when closed ([6dc9c67](https://github.com/kaltura/playkit-js-call-to-action/commit/6dc9c67ecbf3705260fe523a9925ee8c7dd25a3b))
+
 ### 1.0.6 (2024-02-04)
 
 ### 1.0.5 (2024-02-01)
