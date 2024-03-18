@@ -11,7 +11,7 @@ interface CallToActionPopupProps {
   title: string;
   description: string;
   buttons: MessageButtonData[];
-  onClick: (link: string) => void;
+  onClick: (messageButtonData: MessageButtonData) => void;
   onClose: () => void;
   closeLabel: string;
 }
