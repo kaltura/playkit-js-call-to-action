@@ -49,7 +49,7 @@ const expectOverlayExistsAt = (pluginConfig: object, expectedStartTime: number) 
 const expectOverlayDoesntExistAfter = (pluginConfig: object, expectedStartTime: number, expectedDuration: number) => {
   expectElementDoesntExistAfter(pluginConfig, expectedStartTime, expectedDuration, getOverlayElement);
 };
-const expectOverlayElementsInOrder = (pluginConfig: Object, messsages: {messageStartTime?: number; messageText: string}[]) => {
+const expectOverlayElementsInOrder = (pluginConfig: object, messsages: {messageStartTime?: number; messageText: string}[]) => {
   expectElementsInOrder(pluginConfig, messsages, getOverlayElement);
 };
 

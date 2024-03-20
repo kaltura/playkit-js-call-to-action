@@ -218,7 +218,7 @@ export const expectElementExistsForTimeAfterSeek = (pluginConfig: object, seekTo
 };
 
 export const expectElementsInOrder = (pluginConfig: object, messages: {messageStartTime?: number; messageText: string}[], getElement: () => any) => {
-  loadPlayerAndSetMedia(pluginConfig).then(kalturaPlayer => {
+  loadPlayerAndSetMedia(pluginConfig).then(() => {
     getPlayButtonElement().should('exist').click({force: true});
     getPlayButtonElement()
       .should('not.exist')

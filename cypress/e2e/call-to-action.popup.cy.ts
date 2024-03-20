@@ -46,7 +46,7 @@ const expectPopupExistsAt = (pluginConfig: object, expectedStartTime: number) =>
 const expectPopupDoesntExistAfter = (pluginConfig: object, expectedStartTime: number, expectedDuration: number) => {
   expectElementDoesntExistAfter(pluginConfig, expectedStartTime, expectedDuration, getPopupElement);
 };
-const expectPopupElementsInOrder = (pluginConfig: Object, messsages: {messageStartTime?: number; messageText: string}[]) => {
+const expectPopupElementsInOrder = (pluginConfig: object, messsages: {messageStartTime?: number; messageText: string}[]) => {
   expectElementsInOrder(pluginConfig, messsages, getPopupElement);
 };
 
