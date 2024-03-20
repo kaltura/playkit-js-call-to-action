@@ -1,10 +1,14 @@
-import {KalturaPlayer, ui, PlaykitUI} from '@playkit-js/kaltura-player-js';
+// @ts-expect-error - TS2305: Module "@playkit-js/kaltura-player-js" has no exported member core
+import {KalturaPlayer, ui, PlaykitUI, core} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
 
 import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
 import {MessageButtonData, MessageData} from './types';
 import {CallToActionOverlay, CallToActionPopup} from './components';
+import {CallToActionEvents} from './events/events';
+
+const {FakeEvent} = core;
 
 const DESCRIPTION_LINES_SMALL = 2;
 const DESCRIPTION_LINES_LARGE = 4;
@@ -59,7 +63,7 @@ class CallToActionManager {
           title={title}
           description={description}
           buttons={buttons}
-          onClick={(link: string) => this.onCallToActionButtonClick(link)}
+          onClick={(messageButtonData: MessageButtonData) => this.onCallToActionButtonClick(messageButtonData)}
           onClose={() => {
             this.hidePopup();
             onClose && onClose();
@@ -91,7 +95,7 @@ class CallToActionManager {
             title={title}
             description={description}
             buttons={buttons}
-            onClick={(link: string) => this.onCallToActionButtonClick(link)}
+            onClick={(messageButtonData: MessageButtonData) => this.onCallToActionButtonClick(messageButtonData)}
             onClose={() => {
               this.onOverlayCloseClick();
               onClose && onClose();
@@ -124,7 +128,8 @@ class CallToActionManager {
     }
   }
 
-  private onCallToActionButtonClick(link: string) {
+  private onCallToActionButtonClick(messageButtonData: MessageButtonData) {
+    const {link} = messageButtonData;
     if (link.startsWith('http://') || link.startsWith('https://')) {
       window.open(link, '_blank');
     } else {
@@ -133,6 +138,9 @@ class CallToActionManager {
       // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
+
+    // @ts-expect-error - TS2339: Property dispatchEvent does not exist on type KalturaPlayer
+    this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_BUTTON_CLICK, messageButtonData));
   }
 
   private hideMessageAfterDuration(duration?: number) {

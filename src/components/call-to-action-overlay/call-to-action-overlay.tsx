@@ -16,7 +16,7 @@ interface CallToActionOverlayProps {
   description: string;
   buttons: MessageButtonData[];
   onClose: () => void;
-  onClick: (link: string) => void;
+  onClick: (messageButtonData: MessageButtonData) => void;
   closeLabel: string;
   descriptionLines: number;
   sizeClass: string;
