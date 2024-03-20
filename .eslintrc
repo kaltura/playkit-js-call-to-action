@@ -30,8 +30,8 @@
             "error",
             {
                 "assertFunctionNames": [
-                    "expect",
-                    "cy.**.should"
+                    "expect*",
+                    "*.should"
                 ]
             }
         ]

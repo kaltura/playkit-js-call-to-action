@@ -8,6 +8,9 @@ on:
       - "*"
 
 jobs:
+  tests:
+    uses: kaltura/playkit-js-common/.github/workflows/cypress.yml@master
+    secrets: inherit
   build:
     uses: kaltura/ovp-pipelines-pub/.github/workflows/player_tests.yaml@master
     with:
@@ -20,7 +23,7 @@ jobs:
       yarn-run-to-execute: 'eslint'
 
 
-
+      
   notification:
     if: always()
     uses: kaltura/ovp-pipelines-pub/.github/workflows/notification.yaml@master

@@ -19,8 +19,8 @@ interface CallToActionPopupProps {
 const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
   ({title, description, buttons, onClick, onClose, closeLabel}: CallToActionPopupProps) => {
     return (
-      <div className={styles.callToActionPopup}>
-        <div className={styles.closeButton}>
+      <div className={styles.callToActionPopup} data-testid="call-to-action-popup">
+        <div className={styles.closeButton} data-testid="call-to-action-popup-close-button">
           <Button
             onClick={onClose}
             type={ButtonType.borderlessTranslucent}
