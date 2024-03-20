@@ -4,14 +4,12 @@
     "plugins": [
         "@typescript-eslint",
         "prettier",
-        "jsdoc",
         "cypress"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "preact",
-        "plugin:jsdoc/recommended",
         "plugin:cypress/recommended"
     ],
     "globals": {
