@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.8 (2024-03-31)
+
+
+### Bug Fixes
+
+* **FEC-13528:** Call To Action plugin - add cypress tests ([d1045c9](https://github.com/kaltura/playkit-js-call-to-action/commit/d1045c94ac62dadae21eb606ec4ce079c37738c6))
+
 ### 1.0.7 (2024-03-14)
 
 
