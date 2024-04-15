@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.9 (2024-04-15)
+
+
+### Bug Fixes
+
+* **FEC-13873:** when duration is empty the overlay does not appear ([#19](https://github.com/kaltura/playkit-js-call-to-action/issues/19)) ([d9732d9](https://github.com/kaltura/playkit-js-call-to-action/commit/d9732d918538e500c1df5723e611f40aef1b56bc))
+
 ### 1.0.8 (2024-03-31)
 
 
