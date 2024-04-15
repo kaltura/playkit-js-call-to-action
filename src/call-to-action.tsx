@@ -154,7 +154,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
             message.timing.showOnEnd === true ||
             message.timing.timeFromStart !== undefined ||
             message.timing.timeFromEnd !== undefined);
-        const durationValid = message.timing && (message.timing.duration === undefined || message.timing.duration > 0);
+        const durationValid =
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          message.timing && (message.timing.duration === undefined || message.timing.duration > 0 || message.timing.duration === '');
         const contentValid = message.description || message.title || message.buttons.length;
 
         return durationValid && timingValid && contentValid;
