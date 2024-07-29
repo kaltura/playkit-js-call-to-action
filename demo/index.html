@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Kaltura Demo Pages - Created by Jonathan Gold" />
+    <title>CTA Plugin</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script src="https://unpkg.com/@playkit-js/kaltura-player-js@canary/dist/kaltura-ovp-player.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/ui-managers@canary/dist/playkit-ui-managers.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-playlist@canary/dist/playkit-playlist.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/info@canary/dist/playkit-info.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/related@canary/dist/playkit-related.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-downloads@canary/dist/playkit-downloads.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/moderation@canary/dist/playkit-moderation.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/transcript@canary/dist/playkit-transcript.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/share@canary/dist/playkit-share.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/navigation@canary/dist/playkit-navigation.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-dual-screen@canary/dist/playkit-dual-screen.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-youtube@canary/dist/playkit-youtube.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/call-to-action@canary/dist/playkit-call-to-action.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-timeline@canary/dist/playkit-timeline.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-kaltura-cuepoints@canary/dist/playkit-kaltura-cuepoints.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-ivq@canary/dist/playkit-ivq.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/playkit-js-kaltura-live@canary/dist/playkit-kaltura-live.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/hotspots@canary/dist/playkit-hotspots.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/@playkit-js/slate@canary/dist/playkit-slate.js" type="text/javascript"></script>
+    <script src="./playkit-call-to-action.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="player-placeholder"></div>
+    <script type="text/javascript">
+      const config = {
+        log: {
+          level: 'DEBUG'
+        },
+        targetId: 'player-placeholder',
+        provider: {
+          env: {
+            serviceUrl: 'https://api.nvq2.ovp.kaltura.com/api_v3',
+            cdnUrl: 'https://api.nvq2.ovp.kaltura.com',
+            statsServiceUrl: 'https://analytics.rcqa3.kaltura.com',
+            liveStatsServiceUrl: 'https://livestats.nvq2.ovp.kaltura.com',
+            analyticsServiceUrl: 'https://analytics.nvq2.ovp.kaltura.com',
+            apiFeatures: {
+              entryRedirect: '1'
+            },
+            kmsHistoryProxyUrl: 'https://async-api.nvq2.ovp.kaltura.com/api_v3/'
+          },
+          partnerId: '242',
+          uiConfId: '23509762',
+          ks: 'djJ8MjQyfGDNO9E6UebFcKJbycYefhhWllSW1LgkHLrwMK6Uc0hIgJNEVPvWSwyl1gr0l1sMX5eqkMOirtANUMVFsLkQXB_wTnrIHD8nEJdWUZ06-vzYekJHaxfWSeyB4EVccaGBgQaq90lQMGXSYw6IiJcI_lZCGDP4YoVGX8SeO--Zfb8Sv8hXIMm5EGSMGqSVQRAm2G-zK4Q4_yVNGGHuxLiXgoQFoyZmKwl0T-uhVFfFXmyj_7VPOReJJTbfYFGNU4rx3ih_qax3jOUDo7hM3E02OHaJLkEA5xtGAittzFNGyqSuebPhzYSL01Rzn6nK5qbhQbeHs4cRflA4n4EloHGkF1i3l7QaQ9Rho6KMYCD1OitcaiFbZorYS5LRBQWp1HSSB0U5Rg0IR9moRzKwaVwS7qRJdoY0bWhv9KvvfTSofQLac7RAVwgPCkX3xo6LF9NVSWodfZ9l732LolRXrXNwBV8=',
+          log: {
+            level: 'ERROR'
+          }
+        },
+        ui: {
+          locale: 'en',
+          translations: {
+            en: {
+              slate: {
+                dismiss: 'Dismiss'
+              }
+            }
+          }
+        },
+        plugins: {
+          kava: {},
+          playlist: {},
+          uiManagers: {},
+          navigation: {},
+          kalturaCuepoints: {},
+          timeline: {},
+          share: {},
+          'playkit-js-transcript': {},
+          'playkit-js-moderation': {},
+          'playkit-js-info': {},
+          download: {},
+          related: {},
+          slate: {},
+          dualscreen: {},
+          callToAction: {
+            messages: [
+              {
+                title: 'This is the title 1',
+                description: 'This is the description 1',
+                showToast: true,
+                timing: {
+                  redisplayMessage: true,
+                  duration: 500,
+                  timeFromStart: 3,
+                  showOnStart: false,
+                  showOnEnd: false
+                  // timeFromEnd: -1
+                },
+                buttons: [
+                  {
+                    label: 'Go to entry',
+                    link: '0_jmzquob1',
+                    type: 'secondary'
+                  },
+                  {
+                    label: 'Go to site',
+                    link: 'https://www.google.com',
+                    type: 'primary'
+                  }
+                ]
+              },
+              {
+                title: 'New call to action 2',
+                description: 'description 2',
+                showToast: true,
+                buttons: [
+                  {
+                    label: 'Go to site',
+                    link: 'https://www.google.co.il',
+                    type: 'secondary'
+                  },
+                  {
+                    label: 'Go to entry',
+                    link: '0_vry5u8hk',
+                    type: 'primary'
+                  }
+                ],
+                timing: {
+                  duration: 10,
+                  redisplayMessage: true,
+                  showOnStart: false,
+                  showOnEnd: false,
+                  timeFromStart: -1,
+                  timeFromEnd: 10
+                }
+              }
+            ]
+          },
+          'playkit-js-hotspots': {}
+        },
+      };
+
+      const player = KalturaPlayer.setup(config);
+      
+      player.loadMedia({entryId: '0_vry5u8hk'});
+
+    </script>
+  </body>
+</html>
