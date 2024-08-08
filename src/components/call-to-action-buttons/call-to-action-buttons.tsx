@@ -13,7 +13,7 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
     return (
       <div className={`${styles.callToActionButtons}`}>
-        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button)} />
+        <ButtonWithTooltip type={buttonType} label={button.label} onClick={(): void => onClick(button)} focusOnMount />
       </div>
     );
   }
@@ -24,7 +24,7 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
   return (
     <div className={`${styles.callToActionButtons} ${styles.twoButtons}`}>
-      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1)} />
+      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1)} focusOnMount />
       <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2)} />
     </div>
   );
