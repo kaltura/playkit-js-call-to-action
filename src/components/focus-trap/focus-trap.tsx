@@ -1,14 +1,18 @@
 import {ComponentChildren} from 'preact';
 import {useEffect, useRef, useCallback} from 'preact/hooks';
 
+import {ui} from '@playkit-js/kaltura-player-js';
+const {withEventManager} = ui.Event;
+
 interface FocusTrapProps {
   children: ComponentChildren;
   active: boolean;
+  eventManager: any;
 }
 
 const FOCUSABLE_ELEMENTS_QUERY = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-const FocusTrap = ({children, active}: FocusTrapProps) => {
+const FocusTrap = withEventManager(({children, active, eventManager}: FocusTrapProps) => {
   const trapRef = useRef(null);
 
   const setupFocusTrap = useCallback(() => {
@@ -36,11 +40,8 @@ const FocusTrap = ({children, active}: FocusTrapProps) => {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    eventManager?.unlisten(document, 'keydown', handleKeyDown);
+    eventManager?.listen(document, 'keydown', handleKeyDown);
   }, [active]);
 
   useEffect(() => {
@@ -68,6 +69,6 @@ const FocusTrap = ({children, active}: FocusTrapProps) => {
   }, [active, setupFocusTrap]);
 
   return <div ref={trapRef}>{children}</div>;
-};
+});
 
 export {FocusTrap};
