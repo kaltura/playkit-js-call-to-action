@@ -3,10 +3,11 @@ import {Button, ButtonType} from '@playkit-js/common/dist/components/button';
 interface ButtonWithTooltipProps {
   type: ButtonType;
   label: string;
+  focusOnMount?: boolean;
   onClick: () => void;
 }
 
-const ButtonWithTooltip = ({type, label, onClick}: ButtonWithTooltipProps) => {
+const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithTooltipProps) => {
   const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
 
   const [isFinalized, setIsFinalized] = useState(false);
@@ -39,11 +40,11 @@ const ButtonWithTooltip = ({type, label, onClick}: ButtonWithTooltipProps) => {
   }
 
   return showTooltip ? (
-    <Button type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false}>
+    <Button tabIndex={0} key={'finalized'} type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount}>
       {label}
     </Button>
   ) : (
-    <Button type={type} onClick={onClickWrapper} disabled={false}>
+    <Button tabIndex={0} key={'finalized'} type={type} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount}>
       {label}
     </Button>
   );
