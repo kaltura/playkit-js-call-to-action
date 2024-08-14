@@ -1,5 +1,3 @@
-import {h, Fragment} from 'preact';
-
 import {useState, useRef, useLayoutEffect} from 'preact/hooks';
 import {ui} from '@playkit-js/kaltura-player-js';
 const {Tooltip} = ui.Components;
@@ -37,10 +35,10 @@ const TextWithTooltip = ({text, numberOfLines}: {text: string; numberOfLines: nu
     </div>
   );
   const content = !isFinalized ? (
-    <Fragment>
+    <>
       {textElement}
       {comparisonTextElement}
-    </Fragment>
+    </>
   ) : (
     textElement
   );
