@@ -7,7 +7,7 @@ interface MessageDataWithTracking extends MessageData {
   wasDismissed?: boolean;
 }
 
-class CallToAction extends BasePlugin<CallToActionConfig> {
+class CallToAction extends BasePlugin {
   protected static defaultConfig: CallToActionConfig = {
     messages: []
   };
@@ -27,7 +27,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     return true;
   }
 
-  protected loadMedia(): void {
+  public loadMedia(): void {
     if (!this.messagesFiltered) {
       this.filterMessages();
       this.messagesFiltered = true;
@@ -47,7 +47,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentTime = this.player.currentTime;
+    const currentTime: number = this.player.currentTime;
 
     this.hideActiveMessage();
 
@@ -73,7 +73,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentTime = this.player.currentTime;
+    const currentTime: number = this.player.currentTime;
 
     if (this.activeMessage) {
       this.callToActionManager.removeMessage();
@@ -108,7 +108,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentTime = this.player.currentTime;
+    const currentTime: number = this.player.currentTime;
 
     if (
       this.activeMessage &&
@@ -127,7 +127,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
   private filterMessages() {
     this.messages = this.config.messages
-      .map(message => {
+      .map((message: any) => {
         const {buttons, timing} = message;
 
         if (timing?.timeFromStart !== undefined && timing?.timeFromStart < 0) {
@@ -141,13 +141,13 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
           ...message,
           timing,
           buttons: buttons
-            ? buttons.filter(button => {
+            ? buttons.filter((button: any) => {
                 return button.label && typeof button.label === 'string' && button.link && typeof button.link === 'string';
               })
             : []
         };
       })
-      .filter(message => {
+      .filter((message: any) => {
         const timingValid =
           message.timing &&
           (message.timing.showOnStart === true ||
@@ -175,7 +175,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const videoDuration = this.player.duration;
+    const videoDuration: number = this.player.duration;
     const messageAStartTime = messageA.timing.timeFromEnd !== undefined ? videoDuration - messageA.timing.timeFromEnd : messageA.timing.timeFromStart;
     const messageBStartTime = messageB.timing.timeFromEnd !== undefined ? videoDuration - messageB.timing.timeFromEnd : messageB.timing.timeFromStart;
 
@@ -203,11 +203,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentTime = this.player.currentTime;
+    const currentTime: number = this.player.currentTime;
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const videoDuration = this.player.duration;
+    const videoDuration: number = this.player.duration;
 
     if (showOnStart) {
       return duration - currentTime;
@@ -228,11 +228,11 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const currentTime = this.player.currentTime;
+    const currentTime: number = this.player.currentTime;
     // TODO use updated player types
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const videoDuration = this.player.duration;
+    const videoDuration: number = this.player.duration;
 
     if (showOnStart) return !duration || currentTime <= duration;
     if (showOnEnd) return currentTime === videoDuration;
