@@ -1,5 +1,3 @@
-import {h} from 'preact';
-
 import {ButtonType} from '@playkit-js/common';
 import {ButtonWithTooltip} from '../button-with-tooltip';
 

@@ -1,5 +1,3 @@
-import {h} from 'preact';
-
 import {Button, ButtonType, ButtonSize} from '@playkit-js/common';
 import {ui} from '@playkit-js/kaltura-player-js';
 const {withText} = ui.preacti18n;
