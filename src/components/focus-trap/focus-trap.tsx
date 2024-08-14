@@ -1,4 +1,4 @@
-import {ComponentChildren} from 'preact';
+import {h, ComponentChildren} from 'preact';
 import {useEffect, useRef, useCallback} from 'preact/hooks';
 
 import {ui} from '@playkit-js/kaltura-player-js';

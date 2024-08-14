@@ -1,3 +1,5 @@
+import {h} from 'preact';
+
 // @ts-expect-error - TS2305: Module "@playkit-js/kaltura-player-js" has no exported member core
 import {KalturaPlayer, ui, PlaykitUI, core} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
@@ -139,7 +141,6 @@ class CallToActionManager {
       this.player.loadMedia({entryId: link});
     }
 
-    // @ts-expect-error - TS2339: Property dispatchEvent does not exist on type KalturaPlayer
     this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_BUTTON_CLICK, messageButtonData));
   }
 
