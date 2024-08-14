@@ -1,4 +1,6 @@
-import {Button, ButtonType, ButtonSize} from '@playkit-js/common';
+import {h} from 'preact';
+
+import {Button, ButtonType, ButtonSize, OverlayPortal} from '@playkit-js/common';
 
 import {ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
@@ -58,35 +60,37 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
   connect(mapStateToProps)(
     ({title, description, buttons, onClose, onClick, closeLabel, descriptionLines, sizeClass}: CallToActionOverlayProps): any => {
       return (
-        <div role="alertdialog" data-testid="call-to-action-overlay" className={`${styles.callToActionOverlay} ${sizeClass}`}>
-          <FocusTrap active>
-            <div className={styles.closeButton} data-testid="call-to-action-overlay-close-button">
-              <Button
-                tabIndex={0}
-                onClick={onClose}
-                type={ButtonType.borderless}
-                size={ButtonSize.medium}
-                tooltip={{label: closeLabel!}}
-                ariaLabel={closeLabel}
-                icon={'close'}
-                focusOnMount={buttons.length === 0}
-              />
-            </div>
-            <div className={styles.content}>
-              <div className={styles.title}>
-                <TextWithTooltip text={title || ''} numberOfLines={1} />
+        <OverlayPortal>
+          <div data-testid="call-to-action-overlay" className={`${styles.callToActionOverlay} ${sizeClass}`}>
+            <FocusTrap active>
+              <div className={styles.closeButton} data-testid="call-to-action-overlay-close-button">
+                <Button
+                  tabIndex={0}
+                  onClick={onClose}
+                  type={ButtonType.borderless}
+                  size={ButtonSize.medium}
+                  tooltip={{label: closeLabel!}}
+                  ariaLabel={closeLabel}
+                  icon={'close'}
+                  focusOnMount
+                />
               </div>
+              <div className={styles.content}>
+                <div className={styles.title}>
+                  <TextWithTooltip text={title || ''} numberOfLines={1} />
+                </div>
 
-              <div className={styles.description}>
-                <TextWithTooltip text={description || ''} numberOfLines={descriptionLines} />
-              </div>
+                <div className={styles.description}>
+                  <TextWithTooltip text={description || ''} numberOfLines={descriptionLines} />
+                </div>
 
-              <div className={styles.buttonsContainer}>
-                <CallToActionButtons buttons={buttons} onClick={onClick} />
+                <div className={styles.buttonsContainer}>
+                  <CallToActionButtons buttons={buttons} onClick={onClick} />
+                </div>
               </div>
-            </div>
-          </FocusTrap>
-        </div>
+            </FocusTrap>
+          </div>
+        </OverlayPortal>
       );
     }
   )
