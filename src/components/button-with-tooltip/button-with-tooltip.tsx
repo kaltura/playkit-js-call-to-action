@@ -1,5 +1,3 @@
-import {h} from 'preact';
-
 import {useState, useEffect} from 'preact/hooks';
 import {Button, ButtonType} from '@playkit-js/common/dist/components/button';
 interface ButtonWithTooltipProps {
