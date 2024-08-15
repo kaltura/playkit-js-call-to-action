@@ -8,7 +8,7 @@ interface ButtonWithTooltipProps {
 }
 
 const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithTooltipProps) => {
-  const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
+  const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
 
   const [isFinalized, setIsFinalized] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
