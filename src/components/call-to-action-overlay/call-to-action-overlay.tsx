@@ -73,7 +73,7 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
                   focusOnMount={buttons.length === 0}
                 />
               </div>
-              <div aria-hidden="true" className={styles.content}>
+              <div className={styles.content}>
                 <div className={styles.title}>
                   <TextWithTooltip text={title || ''} numberOfLines={1} />
                 </div>

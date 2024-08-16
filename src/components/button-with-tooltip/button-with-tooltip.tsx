@@ -33,9 +33,11 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithToolt
 
   if (!isFinalized) {
     return (
-      <Button type={type} tooltip={{label}} onClick={onClickWrapper} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)} disabled={false}>
-        {label}
-      </Button>
+      <div aria-hidden="true">
+        <Button type={type} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)}>
+          {label}
+        </Button>
+      </div>
     );
   }
 
