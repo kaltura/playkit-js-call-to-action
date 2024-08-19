@@ -1,5 +1,4 @@
-import {Button, ButtonType, ButtonSize, OverlayPortal} from '@playkit-js/common';
-import {FocusTrap} from '@playkit-js/common/dist/components/focus-trap';
+import {Button, ButtonType, ButtonSize, OverlayPortal, FocusTrap} from '@playkit-js/common';
 
 import {ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;

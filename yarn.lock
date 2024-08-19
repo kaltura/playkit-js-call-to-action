@@ -426,10 +426,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@playkit-js/common@1.5.15":
-  version "1.5.15"
-  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.15.tgz#f2e4739e8b69d9e31eda46e66b32b7f1d61ea3e1"
-  integrity sha512-2a6m42VnnjPohzxrYT6jG9Bol6zD0e/FM3o4RtoZtDfpSSq1sFmeueonDw7Ld4oejXZvnoA1DocjLdBgA9Hvgw==
+"@playkit-js/common@1.5.16":
+  version "1.5.16"
+  resolved "https://registry.yarnpkg.com/@playkit-js/common/-/common-1.5.16.tgz#c745bec956a7992d17051b2024c1d0058dae70dd"
+  integrity sha512-fcDkwPsMEERfCBXER/sZWrbA3dBmFPVVzOyrdJK/ViMf/09mzplZ0zwEZSAH0H7gMCTc2WbJjXddSV47zUBobw==
   dependencies:
     classnames "^2.3.2"
     linkify-it "^4.0.1"
