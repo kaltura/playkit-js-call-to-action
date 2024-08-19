@@ -1,4 +1,4 @@
-import {Button, ButtonType, ButtonSize, OverlayPortal} from '@playkit-js/common';
+import {Button, ButtonType, ButtonSize, OverlayPortal, FocusTrap} from '@playkit-js/common';
 
 import {ui} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
@@ -10,7 +10,6 @@ import {CallToActionButtons} from '../call-to-action-buttons';
 
 import * as styles from './call-to-action-overlay.scss';
 import {MessageButtonData} from '../../types';
-import {FocusTrap} from '../focus-trap';
 
 interface CallToActionOverlayProps {
   title: string;
