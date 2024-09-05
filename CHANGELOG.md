@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.14 (2024-09-05)
+
+
+### Bug Fixes
+
+* **ADA-1503:** Toast notification is not announced by the screen reader ([#27](https://github.com/kaltura/playkit-js-call-to-action/issues/27)) ([834bd27](https://github.com/kaltura/playkit-js-call-to-action/commit/834bd273b8b6abd54ad4d25ec2da4a1211268932))
+
 ### 1.0.13 (2024-08-03)
 
 ### 1.0.12 (2024-06-30)
