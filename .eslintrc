@@ -1,37 +1,25 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint",
-        "prettier",
-        "cypress"
-    ],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "preact",
-        "plugin:cypress/recommended"
-    ],
+    "plugins": ["@typescript-eslint", "prettier", "jsdoc", "cypress", "jest"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "preact", "plugin:jsdoc/recommended", "plugin:cypress/recommended"],
     "globals": {
-        "KalturaPlayer": true,
-        "KalturaPlayerTypes": true
+      "KalturaPlayer": true,
+      "KalturaPlayerTypes": true
     },
+    "ignorePatterns": ["node_modules"],
     "rules": {
-        "prettier/prettier": "error",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "error"
-        ],
-        "jest/no-deprecated-functions": "off",
-        "jest/valid-expect": "off",
-        "jest/expect-expect": [
-            "error",
-            {
-                "assertFunctionNames": [
-                    "expect*",
-                    "*.should"
-                ]
-            }
-        ]
+      "prettier/prettier": "error",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error"],
+      "jest/no-done-callback": "off",
+      "jest/no-deprecated-functions": "off",
+      "jest/valid-expect": "off",
+      "jest/expect-expect": [
+        "error",
+        {
+          "assertFunctionNames": ["expect*", "*.should"]
+        }
+      ]
     }
-}
+  }

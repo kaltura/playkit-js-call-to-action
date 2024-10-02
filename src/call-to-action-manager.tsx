@@ -1,3 +1,5 @@
+import {h} from 'preact';
+
 // @ts-expect-error - TS2305: Module "@playkit-js/kaltura-player-js" has no exported member core
 import {KalturaPlayer, ui, PlaykitUI, core} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
