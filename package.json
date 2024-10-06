@@ -84,7 +84,7 @@
   },
   "homepage": "https://github.com/kaltura/playkit-js-call-to-action#readme",
   "dependencies": {
-    "@playkit-js/common": "1.5.18"
+    "@playkit-js/common": "1.5.16"
   },
   "kaltura": {
     "name": "call-to-action",
