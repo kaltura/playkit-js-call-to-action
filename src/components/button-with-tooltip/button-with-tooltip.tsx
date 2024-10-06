@@ -1,3 +1,5 @@
+import {h} from 'preact';
+
 import {useState, useEffect} from 'preact/hooks';
 import {Button, ButtonType} from '@playkit-js/common/dist/components/button';
 interface ButtonWithTooltipProps {
@@ -8,7 +10,7 @@ interface ButtonWithTooltipProps {
 }
 
 const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithTooltipProps) => {
-  const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>();
+  const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
 
   const [isFinalized, setIsFinalized] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
