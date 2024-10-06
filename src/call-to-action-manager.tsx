@@ -1,12 +1,11 @@
 import {h} from 'preact';
 
-// @ts-expect-error - TS2305: Module "@playkit-js/kaltura-player-js" has no exported member core
-import {KalturaPlayer, ui, PlaykitUI, core} from '@playkit-js/kaltura-player-js';
+import {KalturaPlayer, ui, core} from '@playkit-js/kaltura-player-js';
 const {PLAYER_SIZE} = ui.Components;
 
 import {FloatingItem, FloatingManager} from '@playkit-js/ui-managers';
 
-import {MessageButtonData, MessageData} from './types';
+import {MessageButtonData, MessageData} from './types/message-data';
 import {CallToActionOverlay, CallToActionPopup} from './components';
 import {CallToActionEvents} from './events/events';
 
@@ -17,7 +16,7 @@ const DESCRIPTION_LINES_LARGE = 4;
 
 class CallToActionManager {
   private player: KalturaPlayer;
-  private eventManager: PlaykitUI.EventManager;
+  private eventManager: any;
   private store: any;
 
   private removeActiveOverlay: null | (() => void) = null;
@@ -26,7 +25,7 @@ class CallToActionManager {
   private playQueued = false;
   private playOnClose = false;
 
-  constructor(player: KalturaPlayer, eventManager: PlaykitUI.EventManager) {
+  constructor(player: KalturaPlayer, eventManager: any) {
     this.player = player;
     this.store = ui.redux.useStore();
     this.eventManager = eventManager;
@@ -135,13 +134,9 @@ class CallToActionManager {
     if (link.startsWith('http://') || link.startsWith('https://')) {
       window.open(link, '_blank');
     } else {
-      // TODO use updated player types
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       this.player.loadMedia({entryId: link});
     }
 
-    // @ts-expect-error - TS2339: Property dispatchEvent does not exist on type KalturaPlayer
     this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_BUTTON_CLICK, messageButtonData));
   }
 

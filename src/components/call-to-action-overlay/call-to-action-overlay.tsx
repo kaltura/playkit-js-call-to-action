@@ -11,7 +11,7 @@ import {TextWithTooltip} from '../text-with-tooltip';
 import {CallToActionButtons} from '../call-to-action-buttons';
 
 import * as styles from './call-to-action-overlay.scss';
-import {MessageButtonData} from '../../types';
+import {MessageButtonData} from '../../types/message-data';
 
 interface CallToActionOverlayProps {
   title: string;
