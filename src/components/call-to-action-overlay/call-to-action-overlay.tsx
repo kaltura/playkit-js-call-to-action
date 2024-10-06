@@ -60,9 +60,9 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
     ({title, description, buttons, onClose, onClick, closeLabel, descriptionLines, sizeClass}: CallToActionOverlayProps): any => {
       return (
         <OverlayPortal>
-          <Overlay>
-            <div data-testid="call-to-action-overlay" className={`${styles.callToActionOverlay} ${sizeClass}`}>
-              <FocusTrap active>
+          <FocusTrap active>
+            <Overlay open permanent>
+              <div data-testid="call-to-action-overlay" className={`${styles.callToActionOverlay} ${sizeClass}`}>
                 <div className={styles.closeButton} data-testid="call-to-action-overlay-close-button">
                   <Button
                     tabIndex={0}
@@ -88,9 +88,9 @@ const CallToActionOverlay = withText({closeLabel: 'overlay.close'})(
                     <CallToActionButtons buttons={buttons} onClick={onClick} />
                   </div>
                 </div>
-              </FocusTrap>
-            </div>
-          </Overlay>
+              </div>
+            </Overlay>
+          </FocusTrap>
         </OverlayPortal>
       );
     }
