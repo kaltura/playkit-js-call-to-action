@@ -1,8 +1,10 @@
+import {h} from 'preact';
+
 import {ButtonType} from '@playkit-js/common';
 import {ButtonWithTooltip} from '../button-with-tooltip';
 
 import * as styles from './call-to-action-buttons.scss';
-import {MessageButtonData, MessageButtonType} from '../../types';
+import {MessageButtonData, MessageButtonType} from '../../types/message-data';
 
 const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonData>; onClick: (messageButtonData: MessageButtonData) => void}) => {
   if (!buttons.length) {
@@ -23,7 +25,7 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
   const button2Type = button2.type === MessageButtonType.SECONDARY ? ButtonType.secondary : ButtonType.primary;
 
   return (
-    <div className={`${styles.callToActionButtons} ${styles.twoButtons}`}>
+    <div className={styles.callToActionButtons}>
       <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1)} focusOnMount />
       <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2)} />
     </div>
