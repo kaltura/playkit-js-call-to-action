@@ -3,7 +3,7 @@ import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
 import {MetadataLoader} from './providers/metadata-loader';
 import {KalturaMetadata} from './providers/response-types/kaltura-metadata';
-import { XMLParser } from "fast-xml-parser";
+import {XMLParser} from 'fast-xml-parser';
 
 interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
@@ -133,12 +133,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       return;
     }
     const ks = this.player.config.session?.ks || '';
-    const data: Map<string, any> = await this.player.provider.doRequest(
-      [
-        {loader: MetadataLoader, params: {entryId, metadataProfileId}},
-      ],
-      ks
-    );
+    const data: Map<string, any> = await this.player.provider.doRequest([{loader: MetadataLoader, params: {entryId, metadataProfileId}}], ks);
     return this.parseDataFromResponse(data);
   }
 
@@ -153,26 +148,28 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     return kalturaMetadata;
   }
 
-  private replaceMetadataFields(metadataMessages: any, metadataOnEntry: KalturaMetadata){
+  private replaceMetadataFields(metadataMessages: any, metadataOnEntry: KalturaMetadata) {
     if (metadataOnEntry?.xml) {
       const parser = new XMLParser();
       const parsedResult = parser.parse(metadataOnEntry.xml);
       const metadata = parsedResult.metadata;
-      return metadataMessages.map((item) => ({
+      return metadataMessages.map(item => ({
         ...item,
-        title: metadata[item.title] || "",
-        description: metadata[item.description] || "",
-        buttons: item.buttons.map((button) => (
-          metadata[button.label] && metadata[button.link] ?
-          {
-          ...button,
-          label: metadata[button.label],
-          link: metadata[button.link],
-        } : {
-              ...button,
-              label: "",
-              link: "",
-            })),
+        title: metadata[item.title] || '',
+        description: metadata[item.description] || '',
+        buttons: item.buttons.map(button =>
+          metadata[button.label] && metadata[button.link]
+            ? {
+                ...button,
+                label: metadata[button.label],
+                link: metadata[button.link]
+              }
+            : {
+                ...button,
+                label: '',
+                link: ''
+              }
+        )
       }));
     }
     return [];
