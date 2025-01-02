@@ -1,6 +1,9 @@
 import {BasePlugin, KalturaPlayer} from '@playkit-js/kaltura-player-js';
 import {CallToActionConfig, MessageData} from './types';
 import {CallToActionManager} from './call-to-action-manager';
+import {MetadataLoader} from './providers/metadata-loader';
+import {KalturaMetadata} from './providers/response-types/kaltura-metadata';
+import {XMLParser} from 'fast-xml-parser';
 
 interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
@@ -27,9 +30,9 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     return true;
   }
 
-  protected loadMedia(): void {
+  protected async loadMedia(): Promise<void> {
     if (!this.messagesFiltered) {
-      this.filterMessages();
+      await this.filterMessages();
       this.messagesFiltered = true;
     }
 
@@ -125,8 +128,61 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     this.messages.sort((messageA: MessageData, messageB: MessageData) => this.compareMessagesByTiming(messageA, messageB));
   }
 
-  private filterMessages() {
-    this.messages = this.config.messages
+  private async getMetadataOnEntry(entryId: string | undefined, metadataProfileId: number | undefined): Promise<KalturaMetadata> {
+    if (!entryId || !metadataProfileId) {
+      return;
+    }
+    const ks = this.player.config.session?.ks || '';
+    const data: Map<string, any> = await this.player.provider.doRequest([{loader: MetadataLoader, params: {entryId, metadataProfileId}}], ks);
+    return this.parseDataFromResponse(data);
+  }
+
+  private parseDataFromResponse(data: Map<string, any>): KalturaMetadata {
+    let kalturaMetadata;
+    if (data) {
+      if (data.has(MetadataLoader.id)) {
+        const metadataLoader = data.get(MetadataLoader.id);
+        kalturaMetadata = metadataLoader?.response?.metadata;
+      }
+    }
+    return kalturaMetadata;
+  }
+
+  private replaceMetadataFields(metadataMessages: any, metadataOnEntry: KalturaMetadata) {
+    if (metadataOnEntry?.xml) {
+      const parser = new XMLParser();
+      const parsedResult = parser.parse(metadataOnEntry.xml);
+      const metadata = parsedResult.metadata;
+      return metadataMessages.map(item => ({
+        ...item,
+        title: metadata[item.title] || '',
+        description: metadata[item.description] || '',
+        buttons: item.buttons.map(button =>
+          metadata[button.label] && metadata[button.link]
+            ? {
+                ...button,
+                label: metadata[button.label],
+                link: metadata[button.link]
+              }
+            : {
+                ...button,
+                label: '',
+                link: ''
+              }
+        )
+      }));
+    }
+    return [];
+  }
+
+  private async filterMessages() {
+    let mergedMessages = this.config.messages;
+    if (this.config?.metadataMessages) {
+      const metadataOnEntry = await this.getMetadataOnEntry(this.player.sources?.id, this.config?.metadataProfileId);
+      const messagesWithMetadata = this.replaceMetadataFields(this.config.metadataMessages, metadataOnEntry);
+      mergedMessages = [...messagesWithMetadata, ...this.config.messages];
+    }
+    this.messages = mergedMessages
       .map(message => {
         const {buttons, timing} = message;
 
