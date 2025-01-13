@@ -16,8 +16,8 @@ const DESCRIPTION_LINES_LARGE = 4;
 
 enum DisplayType {
   Toast = 'toast',
-  Overlay = 'overlay',
-};
+  Overlay = 'overlay'
+}
 
 class CallToActionManager {
   private player: KalturaPlayer;
