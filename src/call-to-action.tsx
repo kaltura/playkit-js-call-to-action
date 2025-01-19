@@ -31,7 +31,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   }
 
   protected async loadMedia(): Promise<void> {
-    if (!this.messagesFiltered || this.config?.metadataMessages) {
+    if (!this.messagesFiltered || this.config.metadataMessages) {
       await this.filterMessages();
       this.messagesFiltered = true;
     }
