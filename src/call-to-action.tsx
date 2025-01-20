@@ -161,8 +161,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
           metadata[button.label] && metadata[button.link]
             ? {
                 ...button,
-                label: metadata[button.label],
-                link: metadata[button.link]
+                label: String(metadata[button.label]),
+                link: String(metadata[button.link])
               }
             : {
                 ...button,
