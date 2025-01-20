@@ -14,6 +14,11 @@ const {FakeEvent} = core;
 const DESCRIPTION_LINES_SMALL = 2;
 const DESCRIPTION_LINES_LARGE = 4;
 
+enum DisplayType {
+  Toast = 'toast',
+  Overlay = 'overlay'
+}
+
 class CallToActionManager {
   private player: KalturaPlayer;
   private eventManager: any;
@@ -72,6 +77,7 @@ class CallToActionManager {
         />
       )
     });
+    this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, DisplayType.Toast));
   }
 
   private hidePopup() {
@@ -106,6 +112,7 @@ class CallToActionManager {
         )
       })
     );
+    this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, DisplayType.Overlay));
   }
 
   private setOverlay(fn: () => void): void {
