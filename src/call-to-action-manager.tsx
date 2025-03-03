@@ -82,7 +82,7 @@ class CallToActionManager {
     this.player.dispatchEvent(
       new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
         displayType: DisplayType.Toast,
-        ctaSource: ctaSource
+        ctaSource
       })
     );
   }
@@ -122,7 +122,7 @@ class CallToActionManager {
     this.player.dispatchEvent(
       new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
         displayType: DisplayType.Overlay,
-        ctaSource: ctaSource
+        ctaSource
       })
     );
   }
