@@ -241,7 +241,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
-    const source = this.config.metadataMessages?.includes(message) ? 'metadata_based' : 'player_level';
+    const ctaSource = this.config.metadataMessages?.includes(message) ? 'metadata_based' : 'player_level';
 
     this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
@@ -250,7 +250,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       onClose: () => {
         message.wasDismissed = true;
       },
-      source
+      ctaSource
     });
   }
 
