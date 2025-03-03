@@ -54,13 +54,13 @@ class CallToActionManager {
     description,
     buttons,
     onClose,
-    ctaSource
+    isMetadataBased
   }: {
     title?: string;
     description?: string;
     buttons?: MessageButtonData[];
     onClose?: () => void;
-    ctaSource: 'metadata_based' | 'player_level';
+    isMetadataBased: boolean;
   }) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
@@ -82,7 +82,7 @@ class CallToActionManager {
     this.player.dispatchEvent(
       new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
         displayType: DisplayType.Toast,
-        ctaSource
+        isMetadataBased
       })
     );
   }
@@ -92,7 +92,7 @@ class CallToActionManager {
     this.popupInstance = null;
   }
 
-  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void, ctaSource?: 'metadata_based' | 'player_level') {
+  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void, isMetadataBased?: boolean) {
     if (!this.player.paused || this.playQueued) {
       this.player.pause();
       this.playOnClose = true;
@@ -122,7 +122,7 @@ class CallToActionManager {
     this.player.dispatchEvent(
       new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
         displayType: DisplayType.Overlay,
-        ctaSource
+        isMetadataBased
       })
     );
   }
@@ -172,12 +172,12 @@ class CallToActionManager {
     message,
     duration,
     onClose,
-    ctaSource
+    isMetadataBased
   }: {
     message: MessageData;
     duration?: number;
     onClose: () => void;
-    ctaSource: 'metadata_based' | 'player_level';
+    isMetadataBased: boolean;
   }) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {
@@ -185,7 +185,7 @@ class CallToActionManager {
       }
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
-        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose, ctaSource);
+        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose, isMetadataBased);
         this.hideMessageAfterDuration(duration);
         break;
       }
@@ -193,12 +193,12 @@ class CallToActionManager {
       case PLAYER_SIZE.LARGE:
       case PLAYER_SIZE.EXTRA_LARGE: {
         if (message.showToast) {
-          this.showPopup({...message, onClose, ctaSource});
+          this.showPopup({...message, onClose, isMetadataBased});
           if (message.timing.showOnEnd) {
             this.hideMessageAfterDuration(duration);
           }
         } else {
-          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose, ctaSource);
+          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose, isMetadataBased);
           this.hideMessageAfterDuration(duration);
         }
       }
