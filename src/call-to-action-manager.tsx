@@ -53,12 +53,14 @@ class CallToActionManager {
     title,
     description,
     buttons,
-    onClose
+    onClose,
+    source
   }: {
     title?: string;
     description?: string;
     buttons?: MessageButtonData[];
     onClose?: () => void;
+    source: 'metadata_based' | 'player_level';
   }) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
@@ -77,7 +79,12 @@ class CallToActionManager {
         />
       )
     });
-    this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, DisplayType.Toast));
+    this.player.dispatchEvent(
+      new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
+        displayType: DisplayType.Toast,
+        ctaSource: source
+      })
+    );
   }
 
   private hidePopup() {
@@ -85,7 +92,7 @@ class CallToActionManager {
     this.popupInstance = null;
   }
 
-  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void) {
+  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void, source?: 'metadata_based' | 'player_level') {
     if (!this.player.paused || this.playQueued) {
       this.player.pause();
       this.playOnClose = true;
@@ -112,7 +119,12 @@ class CallToActionManager {
         )
       })
     );
-    this.player.dispatchEvent(new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, DisplayType.Overlay));
+    this.player.dispatchEvent(
+      new FakeEvent(CallToActionEvents.CALL_TO_ACTION_DISPLAYED, {
+        displayType: DisplayType.Overlay,
+        ctaSource: source
+      })
+    );
   }
 
   private setOverlay(fn: () => void): void {
@@ -156,14 +168,24 @@ class CallToActionManager {
     }
   }
 
-  public addMessage({message, duration, onClose}: {message: MessageData; duration?: number; onClose: () => void}) {
+  public addMessage({
+    message,
+    duration,
+    onClose,
+    source
+  }: {
+    message: MessageData;
+    duration?: number;
+    onClose: () => void;
+    source: 'metadata_based' | 'player_level';
+  }) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {
         return;
       }
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
-        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose);
+        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose, source);
         this.hideMessageAfterDuration(duration);
         break;
       }
@@ -171,12 +193,12 @@ class CallToActionManager {
       case PLAYER_SIZE.LARGE:
       case PLAYER_SIZE.EXTRA_LARGE: {
         if (message.showToast) {
-          this.showPopup({...message, onClose});
+          this.showPopup({...message, onClose, source});
           if (message.timing.showOnEnd) {
             this.hideMessageAfterDuration(duration);
           }
         } else {
-          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose);
+          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose, source);
           this.hideMessageAfterDuration(duration);
         }
       }
