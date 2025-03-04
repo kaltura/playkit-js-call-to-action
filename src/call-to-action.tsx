@@ -241,6 +241,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
+    const isMetadataBased = !!this.config.metadataMessages?.includes(message);
 
     this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
@@ -248,7 +249,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       duration,
       onClose: () => {
         message.wasDismissed = true;
-      }
+      },
+      isMetadataBased
     });
   }
 
