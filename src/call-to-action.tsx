@@ -241,7 +241,12 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
-    const isMetadataBased = !!this.config.metadataMessages?.includes(message);
+    const isMetadataBased = !this.config.messages?.some(
+      (activeMsg: MessageData) =>
+        activeMsg.title === (message as MessageData)?.title &&
+        activeMsg.description === (message as MessageData)?.description &&
+        activeMsg.timing === (message as MessageData)?.timing
+    );
 
     this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
