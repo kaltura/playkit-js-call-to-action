@@ -26,10 +26,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     this.callToActionManager = new CallToActionManager(player, this.eventManager);
 
     // set isMetadataBased to false by default in all messages
-    this.config.messages = this.config.messages.map(message => ({
-      ...message,
-      isMetadataBased: false
-    }));
+    this.config.messages.forEach(message => (message.isMetadataBased = false));
   }
 
   static isValid() {
