@@ -22,6 +22,7 @@ interface MessageData {
     timeFromStart?: number;
     timeFromEnd?: number;
   };
+  isMetadataBased?: boolean;
 }
 
 export {MessageData, MessageButtonData, MessageButtonType};

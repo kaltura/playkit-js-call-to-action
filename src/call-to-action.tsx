@@ -24,6 +24,9 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
     this.callToActionManager = new CallToActionManager(player, this.eventManager);
+
+    // set isMetadataBased to false by default in all messages
+    this.config.messages.forEach(message => (message.isMetadataBased = false));
   }
 
   static isValid() {
@@ -169,7 +172,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
                 label: '',
                 link: ''
               }
-        )
+        ),
+        isMetadataBased: true
       }));
     }
     return [];
@@ -241,16 +245,13 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private showMessage(message: MessageDataWithTracking, duration?: number) {
     this.activeMessage = message;
     message.wasShown = true;
-    const isMetadataBased = !!this.config.metadataMessages?.includes(message);
-
     this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
       message,
       duration,
       onClose: () => {
         message.wasDismissed = true;
-      },
-      isMetadataBased
+      }
     });
   }
 
