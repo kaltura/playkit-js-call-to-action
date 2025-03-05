@@ -8,7 +8,6 @@ import {XMLParser} from 'fast-xml-parser';
 interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
   wasDismissed?: boolean;
-  isMetadataBased?: boolean;
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
@@ -25,6 +24,12 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
     this.callToActionManager = new CallToActionManager(player, this.eventManager);
+
+    // set isMetadataBased to false by default in all messages
+    this.config.messages = this.config.messages.map(message => ({
+      ...message,
+      isMetadataBased: false
+    }));
   }
 
   static isValid() {
@@ -241,7 +246,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   }
 
   private showMessage(message: MessageDataWithTracking, duration?: number) {
-    message.isMetadataBased = message.isMetadataBased === undefined ? false : message.isMetadataBased;
     this.activeMessage = message;
     message.wasShown = true;
     this.callToActionManager.removeMessage();
