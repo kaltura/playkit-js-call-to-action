@@ -53,14 +53,14 @@ class CallToActionManager {
     title,
     description,
     buttons,
-    onClose,
-    isMetadataBased
+    isMetadataBased,
+    onClose
   }: {
     title?: string;
     description?: string;
     buttons?: MessageButtonData[];
+    isMetadataBased?: boolean;
     onClose?: () => void;
-    isMetadataBased: boolean;
   }) {
     this.popupInstance = this.floatingManager.add({
       label: 'Call To Action Popup',
@@ -92,13 +92,13 @@ class CallToActionManager {
     this.popupInstance = null;
   }
 
-  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void, isMetadataBased?: boolean) {
+  private showOverlay(message: MessageData, descriptionLines: number, onClose?: () => void) {
     if (!this.player.paused || this.playQueued) {
       this.player.pause();
       this.playOnClose = true;
     }
 
-    const {title, description, buttons} = message;
+    const {title, description, buttons, isMetadataBased} = message;
     this.setOverlay(
       this.player.ui.addComponent({
         label: 'callToActionOverlay',
@@ -168,24 +168,14 @@ class CallToActionManager {
     }
   }
 
-  public addMessage({
-    message,
-    duration,
-    onClose,
-    isMetadataBased
-  }: {
-    message: MessageData;
-    duration?: number;
-    onClose: () => void;
-    isMetadataBased: boolean;
-  }) {
+  public addMessage({message, duration, onClose}: {message: MessageData; duration?: number; onClose: () => void}) {
     switch (this.store.getState().shell.playerSize) {
       case PLAYER_SIZE.TINY: {
         return;
       }
       case PLAYER_SIZE.EXTRA_SMALL:
       case PLAYER_SIZE.SMALL: {
-        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose, isMetadataBased);
+        this.showOverlay(message, DESCRIPTION_LINES_SMALL, onClose);
         this.hideMessageAfterDuration(duration);
         break;
       }
@@ -193,12 +183,12 @@ class CallToActionManager {
       case PLAYER_SIZE.LARGE:
       case PLAYER_SIZE.EXTRA_LARGE: {
         if (message.showToast) {
-          this.showPopup({...message, onClose, isMetadataBased});
+          this.showPopup({...message, onClose});
           if (message.timing.showOnEnd) {
             this.hideMessageAfterDuration(duration);
           }
         } else {
-          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose, isMetadataBased);
+          this.showOverlay(message, DESCRIPTION_LINES_LARGE, onClose);
           this.hideMessageAfterDuration(duration);
         }
       }

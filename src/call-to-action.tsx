@@ -8,6 +8,7 @@ import {XMLParser} from 'fast-xml-parser';
 interface MessageDataWithTracking extends MessageData {
   wasShown?: boolean;
   wasDismissed?: boolean;
+  isMetadataBased?: boolean;
 }
 
 class CallToAction extends BasePlugin<CallToActionConfig> {
@@ -169,7 +170,8 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
                 label: '',
                 link: ''
               }
-        )
+        ),
+        isMetadataBased: true
       }));
     }
     return [];
@@ -239,23 +241,16 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   }
 
   private showMessage(message: MessageDataWithTracking, duration?: number) {
+    message.isMetadataBased = message.isMetadataBased === undefined ? false : message.isMetadataBased;
     this.activeMessage = message;
     message.wasShown = true;
-    const isMetadataBased = !this.config.messages?.some(
-      (activeMsg: MessageData) =>
-        activeMsg.title === (message as MessageData)?.title &&
-        activeMsg.description === (message as MessageData)?.description &&
-        activeMsg.timing === (message as MessageData)?.timing
-    );
-
     this.callToActionManager.removeMessage();
     this.callToActionManager.addMessage({
       message,
       duration,
       onClose: () => {
         message.wasDismissed = true;
-      },
-      isMetadataBased
+      }
     });
   }
 
