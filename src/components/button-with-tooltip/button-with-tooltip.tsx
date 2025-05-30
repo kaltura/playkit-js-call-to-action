@@ -7,9 +7,10 @@ interface ButtonWithTooltipProps {
   label: string;
   focusOnMount?: boolean;
   onClick: () => void;
+  className?: string;
 }
 
-const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithTooltipProps) => {
+const ButtonWithTooltip = ({type, label, focusOnMount, onClick, className}: ButtonWithTooltipProps) => {
   const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
 
   const [isFinalized, setIsFinalized] = useState(false);
@@ -36,7 +37,7 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithToolt
   if (!isFinalized) {
     return (
       <div aria-hidden="true">
-        <Button type={type} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)}>
+        <Button type={type} setRef={(ref: HTMLButtonElement) => setButtonRef(ref)} className={className}>
           {label}
         </Button>
       </div>
@@ -44,11 +45,11 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick}: ButtonWithToolt
   }
 
   return showTooltip ? (
-    <Button tabIndex={0} key={'finalized'} type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount}>
+    <Button tabIndex={0} key={'finalized'} type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount} className={className}>
       {label}
     </Button>
   ) : (
-    <Button tabIndex={0} key={'finalized'} type={type} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount}>
+    <Button tabIndex={0} key={'finalized'} type={type} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount} className={className}>
       {label}
     </Button>
   );
