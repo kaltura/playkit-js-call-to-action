@@ -26,7 +26,13 @@ const CallToActionButtons = ({buttons, onClick}: {buttons: Array<MessageButtonDa
 
   return (
     <div className={styles.callToActionButtons}>
-      <ButtonWithTooltip type={button1Type} label={button1.label} onClick={(): void => onClick(button1)} focusOnMount />
+      <ButtonWithTooltip
+        className={styles.focusIndicator}
+        type={button1Type}
+        label={button1.label}
+        onClick={(): void => onClick(button1)}
+        focusOnMount
+      />
       <ButtonWithTooltip type={button2Type} label={button2.label} onClick={(): void => onClick(button2)} />
     </div>
   );

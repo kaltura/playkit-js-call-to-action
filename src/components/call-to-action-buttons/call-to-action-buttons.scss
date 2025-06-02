@@ -11,3 +11,8 @@
         word-break: break-all;
     }
 }
+.focusIndicator:focus {
+  outline: thin solid #0000FF;
+  box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px #0000FF;
+  border-radius: 4px;
+}
