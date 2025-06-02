@@ -48,7 +48,8 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick, className}: Butt
     <Button
       tabIndex={0}
       key={'finalized'}
-      type={type} tooltip={{label}}
+      type={type}
+      tooltip={{label}}
       onClick={onClickWrapper}
       disabled={false}
       focusOnMount={focusOnMount}
@@ -56,14 +57,7 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick, className}: Butt
       {label}
     </Button>
   ) : (
-    <Button
-      tabIndex={0} 
-      key={'finalized'}
-      type={type}
-      onClick={onClickWrapper}
-      disabled={false}
-      focusOnMount={focusOnMount}
-      className={className}>
+    <Button tabIndex={0} key={'finalized'} type={type} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount} className={className}>
       {label}
     </Button>
   );
