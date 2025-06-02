@@ -45,11 +45,25 @@ const ButtonWithTooltip = ({type, label, focusOnMount, onClick, className}: Butt
   }
 
   return showTooltip ? (
-    <Button tabIndex={0} key={'finalized'} type={type} tooltip={{label}} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount} className={className}>
+    <Button
+      tabIndex={0}
+      key={'finalized'}
+      type={type} tooltip={{label}}
+      onClick={onClickWrapper}
+      disabled={false}
+      focusOnMount={focusOnMount}
+      className={className}>
       {label}
     </Button>
   ) : (
-    <Button tabIndex={0} key={'finalized'} type={type} onClick={onClickWrapper} disabled={false} focusOnMount={focusOnMount} className={className}>
+    <Button
+      tabIndex={0} 
+      key={'finalized'}
+      type={type}
+      onClick={onClickWrapper}
+      disabled={false}
+      focusOnMount={focusOnMount}
+      className={className}>
       {label}
     </Button>
   );
