@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.25 (2025-07-03)
+
+
+### Bug Fixes
+
+* **ADA-2798:** Add focus indicator ([#39](https://github.com/kaltura/playkit-js-call-to-action/issues/39)) ([a6fc59f](https://github.com/kaltura/playkit-js-call-to-action/commit/a6fc59fdf24e12f5db2fce79035af1fd46afd710))
+
 ### 1.0.24 (2025-05-22)
 
 ### 1.0.23 (2025-04-24)
