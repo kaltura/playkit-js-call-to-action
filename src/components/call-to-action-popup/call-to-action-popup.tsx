@@ -37,7 +37,7 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
           <TextWithTooltip text={title || ''} numberOfLines={1} />
         </div>
         <div className={styles.description}>
-          <TextWithTooltip text={description || ''} numberOfLines={2} />
+          <TextWithTooltip text={description || ''} numberOfLines={3} />
         </div>
 
         <div className={styles.buttonsContainer}>
