@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.27 (2025-09-30)
+
+
+### Bug Fixes
+
+* **SUP-49640:** [UMICH] CTA button word wrap cuts off words ([#41](https://github.com/kaltura/playkit-js-call-to-action/issues/41)) ([4256d1d](https://github.com/kaltura/playkit-js-call-to-action/commit/4256d1d638da26765f7f9da22b89adcccb282a92))
+
 ### 1.0.26 (2025-07-31)
 
 
