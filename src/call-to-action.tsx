@@ -310,6 +310,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
 
     this.activeMessage = null;
     this.activeMessageEndTime = -1;
+    this.lastHideSecond = -1;
     for (const message of this.messages) {
       message.wasShown = false;
       message.wasDismissed = false;
