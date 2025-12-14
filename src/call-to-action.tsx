@@ -67,7 +67,6 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
       if (this.activeMessage && this.compareMessagesByTiming(message, this.activeMessage) < 0) {
         break;
       }
-      
       if (!message.wasShown && this.isMessageInTimeRange(message)) {
         const remainingDuration = this.getRemainingDuration(message);
         if (remainingDuration) {
@@ -75,7 +74,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
         }
         this.showMessage(message, remainingDuration);
         break;
-    }
+      }
     }
   }
 
