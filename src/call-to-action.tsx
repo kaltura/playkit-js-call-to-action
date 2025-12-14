@@ -20,6 +20,7 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
   private messagesFiltered = false;
   private activeMessage: MessageData | null = null;
   private activeMessageEndTime = -1;
+  private lastHideSecond = -1;
 
   constructor(name: string, player: KalturaPlayer, config: CallToActionConfig) {
     super(name, player, config);
@@ -54,23 +55,26 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const currentTime = this.player.currentTime;
-
-    this.hideActiveMessage();
-
+    const second = Math.floor(currentTime);
+    
+    if (second !== this.lastHideSecond) {
+      this.hideActiveMessage();
+      this.lastHideSecond = second;
+    }
+    
     for (let i = this.messages.length - 1; i >= 0; --i) {
       const message = this.messages[i];
-
       if (this.activeMessage && this.compareMessagesByTiming(message, this.activeMessage) < 0) {
         break;
       }
-
+      
       if (!message.wasShown && this.isMessageInTimeRange(message)) {
-        const remainingDuration = this.getRemainingDuration(message);
-        if (remainingDuration) {
-          this.activeMessageEndTime = currentTime + remainingDuration;
-        }
-        this.showMessage(message, remainingDuration);
-        break;
+          const remainingDuration = this.getRemainingDuration(message);
+          if (remainingDuration) {
+            this.activeMessageEndTime = currentTime + remainingDuration;
+          }
+          this.showMessage(message, remainingDuration);
+          break;
       }
     }
   }
