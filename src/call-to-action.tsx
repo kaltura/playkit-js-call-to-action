@@ -56,12 +56,10 @@ class CallToAction extends BasePlugin<CallToActionConfig> {
     // @ts-ignore
     const currentTime = this.player.currentTime;
     const second = Math.floor(currentTime);
-    
     if (second !== this.lastHideSecond) {
       this.hideActiveMessage();
       this.lastHideSecond = second;
     }
-    
     for (let i = this.messages.length - 1; i >= 0; --i) {
       const message = this.messages[i];
       if (this.activeMessage && this.compareMessagesByTiming(message, this.activeMessage) < 0) {
