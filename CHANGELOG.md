@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.31 (2025-12-18)
+
+
+### Bug Fixes
+
+* **SUP-50889:** Call to action is not working in Firefox ([#43](https://github.com/kaltura/playkit-js-call-to-action/issues/43)) ([52b7d1d](https://github.com/kaltura/playkit-js-call-to-action/commit/52b7d1de62bdf5105d63de30c2055b4884d57b99))
+
 ### 1.0.30 (2025-11-27)
 
 ### 1.0.29 (2025-11-06)
