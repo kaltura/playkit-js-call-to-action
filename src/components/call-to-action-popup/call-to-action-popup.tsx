@@ -33,7 +33,7 @@ const CallToActionPopup = withText({closeLabel: 'overlay.close'})(
           />
         </div>
 
-        <div className={styles.title}>
+        <div className={styles.title} role="heading" aria-level="2">
           <TextWithTooltip text={title || ''} numberOfLines={1} />
         </div>
         <div className={styles.description}>
