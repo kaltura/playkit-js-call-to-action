@@ -1,0 +1,167 @@
+{
+  "repositoryName": "playkit-js-call-to-action",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-04",
+
+  "coreResponsibility": {
+    "summary": "A UI plugin for the Kaltura Player that enables customizable call-to-action dialogs (overlays and toast popups) to appear at specific times during video playback, allowing viewers to interact with actionable buttons that can navigate to URLs or load other media entries.",
+    "type": "plugin",
+    "category": "UI Component Plugin"
+  },
+
+  "domainAndLogicOwnership": {
+    "featureOwnership": [
+      "Call-to-action overlay display during video playback",
+      "Call-to-action toast/popup display during video playback",
+      "Timed message scheduling (show on start, show on end, time from start, time from end)",
+      "Message duration and auto-dismiss functionality",
+      "Configurable CTA buttons with URL navigation or entry ID loading",
+      "Message redisplay behavior on seek",
+      "Metadata-based dynamic message content from Kaltura backend",
+      "Responsive display modes based on player size (tiny, small, medium, large, extra-large)",
+      "Focus trap and accessibility support for overlay modals"
+    ],
+    "dataHandling": [
+      "Message configuration parsing and validation",
+      "Message timing state management (wasShown, wasDismissed, activeMessage)",
+      "Player time synchronization for message display triggers",
+      "Kaltura metadata API responses for dynamic CTA content",
+      "XML metadata parsing for entry-specific CTA content"
+    ]
+  },
+
+  "integrationPoints": {
+    "upstream": [
+      {
+        "name": "@playkit-js/kaltura-player-js",
+        "description": "Core Kaltura Player providing player instance, event system, UI framework, and media loading capabilities"
+      },
+      {
+        "name": "@playkit-js/ui-managers",
+        "description": "UI managers plugin providing FloatingManager service for popup rendering"
+      },
+      {
+        "name": "@playkit-js/common",
+        "description": "Shared UI components (Button, OverlayPortal, FocusTrap)"
+      },
+      {
+        "name": "Kaltura metadata_metadata API",
+        "description": "Backend API for fetching entry-specific metadata used in dynamic CTA content"
+      }
+    ],
+    "downstream": [
+      {
+        "name": "Kaltura Player Web Applications",
+        "description": "Any web application embedding the Kaltura Player that wants CTA functionality"
+      },
+      {
+        "name": "KMC (Kaltura Management Console)",
+        "description": "Player configuration interface where CTA messages are configured"
+      }
+    ],
+    "externalAPIs": [
+      {
+        "name": "Kaltura metadata_metadata.list API",
+        "description": "Used to fetch metadata profiles for dynamic CTA content based on entry metadata"
+      }
+    ]
+  },
+
+  "technicalStack": {
+    "primaryLanguages": ["TypeScript", "JavaScript"],
+    "frameworks": ["Preact (JSX)", "Webpack"],
+    "styling": ["SCSS", "CSS Modules"],
+    "testing": ["Cypress (E2E)"],
+    "buildTools": ["Webpack", "Babel", "TypeScript Compiler"],
+    "packageManager": "Yarn",
+    "entryPoints": [
+      {
+        "file": "src/index.ts",
+        "description": "Plugin registration and exports entry point"
+      },
+      {
+        "file": "src/call-to-action.tsx",
+        "description": "Main plugin class (CallToAction) extending BasePlugin - core business logic"
+      },
+      {
+        "file": "src/call-to-action-manager.tsx",
+        "description": "UI manager handling overlay and popup rendering, display logic"
+      }
+    ],
+    "keyFiles": [
+      "src/types/message-data.ts",
+      "src/types/call-to-action-config.ts",
+      "src/events/events.ts",
+      "src/components/call-to-action-overlay/call-to-action-overlay.tsx",
+      "src/components/call-to-action-popup/call-to-action-popup.tsx",
+      "src/providers/metadata-loader.ts"
+    ]
+  },
+
+  "triageKeywords": [
+    "call-to-action",
+    "CTA",
+    "CTA overlay",
+    "CTA popup",
+    "CTA toast",
+    "call to action button",
+    "message timing",
+    "showOnStart",
+    "showOnEnd",
+    "timeFromStart",
+    "timeFromEnd",
+    "redisplayMessage",
+    "callToAction plugin",
+    "CALL_TO_ACTION_DISPLAYED",
+    "CALL_TO_ACTION_BUTTON_CLICK",
+    "playkit-call-to-action",
+    "call-to-action-overlay",
+    "call-to-action-popup",
+    "CTA not showing",
+    "CTA not appearing",
+    "overlay not displaying",
+    "metadata-based CTA",
+    "metadataProfileId",
+    "metadataMessages"
+  ],
+
+  "events": {
+    "dispatched": [
+      {
+        "name": "CALL_TO_ACTION_DISPLAYED",
+        "description": "Fired when a CTA message is displayed (overlay or toast)"
+      },
+      {
+        "name": "CALL_TO_ACTION_BUTTON_CLICK",
+        "description": "Fired when a user clicks a CTA button"
+      }
+    ],
+    "consumed": [
+      "FIRST_PLAYING",
+      "TIME_UPDATE",
+      "SEEKED",
+      "PLAYING"
+    ]
+  },
+
+  "configurationSchema": {
+    "pluginName": "callToAction",
+    "requiredDependencies": ["uiManagers"],
+    "keyConfigOptions": [
+      "messages",
+      "messages[].title",
+      "messages[].description",
+      "messages[].showToast",
+      "messages[].redisplayMessage",
+      "messages[].buttons",
+      "messages[].timing",
+      "messages[].timing.showOnStart",
+      "messages[].timing.showOnEnd",
+      "messages[].timing.timeFromStart",
+      "messages[].timing.timeFromEnd",
+      "messages[].timing.duration",
+      "metadataMessages",
+      "metadataProfileId"
+    ]
+  }
+}
