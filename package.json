@@ -92,7 +92,7 @@
   "kaltura": {
     "name": "call-to-action",
     "dependencies": {
-      "playkit-ui-managers": "1.9.2"
+      "playkit-ui-managers": "1.9.3"
     }
   }
 }
