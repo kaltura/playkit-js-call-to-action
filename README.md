@@ -1,4 +1,4 @@
-# Playkit JS Call To Action - Call To Action plugin for the [PlayKit JS Player]
+# Playkit JS Call To Action - Call To Action plugin for the [PlayKit JS Player] 
 
 [playkit js player]: https://github.com/kaltura/kaltura-player-js
 
